@@ -1,0 +1,1 @@
+sap.ui.define(["it/horsa/gualapack/macchina/controller/BaseController"],function(a){"use strict";return a.extend("it.horsa.gualapack.macchina.controller.MainView",{})});

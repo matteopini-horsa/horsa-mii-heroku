@@ -1,0 +1,483 @@
+{
+  "nome": "ROTOC.ROTOMEC 9R2",
+  "stazione": {
+    "info": [
+      {
+        "key": "Ordine produzione",
+        "value": "J2003328"
+      },
+      {
+        "key": "Fase",
+        "value": "001003"
+      },
+      {
+        "key": "Operatore",
+        "value": "Guasti Manuel"
+      }
+    ],
+    "data": [
+      {
+        "key": "Pers. cliente",
+        "value": false
+      },
+      {
+        "key": "Pres. ridotto",
+        "value": true
+      },
+      {
+        "key": "Qtà fuori Toll.",
+        "value": 4.224
+      },
+      {
+        "key": "Checklist compilata",
+        "value": false
+      }
+    ]
+  },
+  "status": {
+    "error": "Fermo rispetto qualità",
+    "time": "8 min."
+  },
+  "macchina": {
+    "chart": [
+      {
+        "key": "Km richiesti",
+        "value": 40.572,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km mancanti",
+        "value": 30.272,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km buoni",
+        "value": 10.3,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km da ribobinare",
+        "value": 0,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km scarto",
+        "value": 0,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km avviamento",
+        "value": 2.44,
+        "um": "Km",
+        "color": "Good"
+      }
+    ],
+    "info": [
+      {
+        "key": "Km bobina in macchina",
+        "value": 4224
+      },
+      {
+        "key": "Quantità TAX",
+        "value": 11
+      }
+    ]
+  },
+  "columns": [
+    {
+      "label": "Ordine Produzione",
+      "template": "ord_prod"
+    },
+    {
+      "label": "Fase",
+      "template": "fase"
+    },
+    {
+      "label": "Prodotto",
+      "template": "prodotto"
+    },
+    {
+      "label": "Gruppo ABC",
+      "template": "abc"
+    },
+    {
+      "label": "Tecnol. Stampa",
+      "template": "tec_stampa"
+    },
+    {
+      "label": "Cliente Fatturazione",
+      "template": "cliente_fatt"
+    },
+    {
+      "label": "Cliente Rilavoratore",
+      "template": "cliente_rilev"
+    },
+    {
+      "label": "Nota",
+      "template": "nota"
+    },
+    {
+      "label": "Rif ac",
+      "template": "rif_ac"
+    },
+    {
+      "label": "Esuberi",
+      "template": "esuberi"
+    },
+    {
+      "label": "Cert FSC",
+      "template": "cert_fsc"
+    },
+    {
+      "label": "Sosta Interm",
+      "template": "sosta_interm"
+    },
+    {
+      "label": "Pr. Cl.",
+      "template": "pr_cl",
+      "type": "boolean"
+    },
+    {
+      "label": "Data Presenza Cliente",
+      "template": "pr_cl_data",
+      "type": "date"
+    },
+    {
+      "label": "Prod Nuovo",
+      "template": "prod_nuovo"
+    },
+    {
+      "label": "Cil rich",
+      "template": "cil_rich"
+    },
+    {
+      "label": "Cil manc",
+      "template": "cil_manc"
+    },
+    {
+      "label": "Bozza da eseg",
+      "template": "bozza_da_eseg"
+    },
+    {
+      "label": "Vernice",
+      "template": "vernice"
+    },
+    {
+      "label": "Film 1°",
+      "template": "film_1"
+    },
+    {
+      "label": "Film 2°",
+      "template": "film_2"
+    },
+    {
+      "label": "Adesivo",
+      "template": "adesivo"
+    },
+    {
+      "label": "Inchios. prepar.",
+      "template": "inchios__prepar"
+    },
+    {
+      "label": "Ore totali residue",
+      "template": "ore_tot_residue"
+    },
+    {
+      "label": "Km totali residui",
+      "template": "km_tot_residui"
+    },
+    {
+      "label": "Toll neg",
+      "template": "toll_neg"
+    }
+  ],
+  "rows": [
+    {
+      "ord_prod": "J2003328",
+      "fase": "001003",
+      "prodotto": "S4092642",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Success"
+    },
+    {
+      "ord_prod": "J2003189",
+      "fase": "001003",
+      "prodotto": "S4100040",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Warning"
+    },
+    {
+      "ord_prod": "J20003188",
+      "fase": "001003",
+      "prodotto": "S4094441",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "pr_cl": false,
+      "status": "Error"
+    },
+    {
+      "ord_prod": "J2002685",
+      "fase": "001004",
+      "prodotto": "S4102303",
+      "abc": "C",
+      "tec_stampa": "Cymhepta",
+      "cliente_fatt": "GUALA PACK S.P.A.",
+      "nota": "@",
+      "cliente_rilev": "Nutrimaine Yabon",
+      "pr_cl": true,
+      "pr_cl_data": 1634914351680,
+      "status": "Information"
+    },
+    {
+      "ord_prod": "J2003328",
+      "fase": "001003",
+      "prodotto": "S4092642",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Success"
+    },
+    {
+      "ord_prod": "J2003189",
+      "fase": "001003",
+      "prodotto": "S4100040",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Warning"
+    },
+    {
+      "ord_prod": "J20003188",
+      "fase": "001003",
+      "prodotto": "S4094441",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "pr_cl": false,
+      "status": "Error"
+    },
+    {
+      "ord_prod": "J2002685",
+      "fase": "001004",
+      "prodotto": "S4102303",
+      "abc": "C",
+      "tec_stampa": "Cymhepta",
+      "cliente_fatt": "GUALA PACK S.P.A.",
+      "nota": "@",
+      "cliente_rilev": "Nutrimaine Yabon",
+      "pr_cl": true,
+      "pr_cl_data": 1634914351680,
+      "status": "Information"
+    },
+    {
+      "ord_prod": "J2003328",
+      "fase": "001003",
+      "prodotto": "S4092642",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Success"
+    },
+    {
+      "ord_prod": "J2003189",
+      "fase": "001003",
+      "prodotto": "S4100040",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Warning"
+    },
+    {
+      "ord_prod": "J20003188",
+      "fase": "001003",
+      "prodotto": "S4094441",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "pr_cl": false,
+      "status": "Error"
+    },
+    {
+      "ord_prod": "J2002685",
+      "fase": "001004",
+      "prodotto": "S4102303",
+      "abc": "C",
+      "tec_stampa": "Cymhepta",
+      "cliente_fatt": "GUALA PACK S.P.A.",
+      "nota": "@",
+      "cliente_rilev": "Nutrimaine Yabon",
+      "pr_cl": true,
+      "pr_cl_data": 1634914351680,
+      "status": "Information"
+    },
+    {
+      "ord_prod": "J2003328",
+      "fase": "001003",
+      "prodotto": "S4092642",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Success"
+    },
+    {
+      "ord_prod": "J2003189",
+      "fase": "001003",
+      "prodotto": "S4100040",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Warning"
+    },
+    {
+      "ord_prod": "J20003188",
+      "fase": "001003",
+      "prodotto": "S4094441",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "pr_cl": false,
+      "status": "Error"
+    },
+    {
+      "ord_prod": "J2002685",
+      "fase": "001004",
+      "prodotto": "S4102303",
+      "abc": "C",
+      "tec_stampa": "Cymhepta",
+      "cliente_fatt": "GUALA PACK S.P.A.",
+      "nota": "@",
+      "cliente_rilev": "Nutrimaine Yabon",
+      "pr_cl": true,
+      "pr_cl_data": 1634914351680,
+      "status": "Information"
+    },
+    {
+      "ord_prod": "J2003328",
+      "fase": "001003",
+      "prodotto": "S4092642",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Success"
+    },
+    {
+      "ord_prod": "J2003189",
+      "fase": "001003",
+      "prodotto": "S4100040",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Warning"
+    },
+    {
+      "ord_prod": "J20003188",
+      "fase": "001003",
+      "prodotto": "S4094441",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "pr_cl": false,
+      "status": "Error"
+    },
+    {
+      "ord_prod": "J2002685",
+      "fase": "001004",
+      "prodotto": "S4102303",
+      "abc": "C",
+      "tec_stampa": "Cymhepta",
+      "cliente_fatt": "GUALA PACK S.P.A.",
+      "nota": "@",
+      "cliente_rilev": "Nutrimaine Yabon",
+      "pr_cl": true,
+      "pr_cl_data": 1634914351680,
+      "status": "Information"
+    },
+    {
+      "ord_prod": "J2003328",
+      "fase": "001003",
+      "prodotto": "S4092642",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Success"
+    },
+    {
+      "ord_prod": "J2003189",
+      "fase": "001003",
+      "prodotto": "S4100040",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "status": "Warning"
+    },
+    {
+      "ord_prod": "J20003188",
+      "fase": "001003",
+      "prodotto": "S4094441",
+      "abc": "G",
+      "tec_stampa": null,
+      "cliente_fatt": "ANDROS FRANCE",
+      "cliente_rilev": null,
+      "nota": "@",
+      "pr_cl": false,
+      "status": "Error"
+    },
+    {
+      "ord_prod": "J2002685",
+      "fase": "001004",
+      "prodotto": "S4102303",
+      "abc": "C",
+      "tec_stampa": "Cymhepta",
+      "cliente_fatt": "GUALA PACK S.P.A.",
+      "nota": "@",
+      "cliente_rilev": "Nutrimaine Yabon",
+      "pr_cl": true,
+      "pr_cl_data": 1634914351680,
+      "status": "Information"
+    }
+  ]
+}

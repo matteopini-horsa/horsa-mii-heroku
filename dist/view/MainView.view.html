@@ -1,0 +1,147 @@
+<template data-controller-name="it.horsa.gualapack.macchina.controller.MainView" data-saè->
+    <div data-sap-ui-type="sap.m.App" id="idAppControl">
+        <div data-sap-ui-type="sap.m.Page" data-title="Scheda Bordo Macchina {scheda>/nome}">
+
+            <div data-sap-ui-aggregation="headerContent">
+                <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://activities"
+                     data-text="Scelte"
+                     >
+                </div>
+                <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://customer-order-entry"
+                     data-text="Ordini" >
+                </div>
+                <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://action-settings"
+                     data-text="Funzioni Ordine Attivo">
+                </div>
+            </div>
+
+            <div data-sap-ui-aggregation="content">
+                <div class="page-wrapper">
+                    <div class="page-content">
+                        <div class="main-bar">
+                            <!-- Info -->
+                            <div class="main-bar__item">
+                                <div class="flex">
+                                    <div class="info--col-wide">
+                                        <!--                <div class="info-item">J2003328</div>-->
+                                        <div class="value value--L">
+                                            <div class="value__label">Ordine Produzione</div>
+                                            <div class="value__value">J2003328</div>
+                                        </div>
+                                        <!--                <div class="info-item">001003</div>-->
+                                        <div class="value value--L">
+                                            <div class="value__label">Fase</div>
+                                            <div class="value__value">001003</div>
+                                        </div>
+                                        <!--                <div class="info-item">Guasti Manuel</div>-->
+                                        <div class="value value--L">
+                                            <div class="value__label">Operatore</div>
+                                            <div class="value__value">Guasti Manuel</div>
+                                        </div>
+                                    </div>
+                                    <div class="info--col-narrow flex--v">
+                                        <div class="value">
+                                            <div class="value__label">Pers. ridotto</div>
+                                            <div class="value__value">Sì</div>
+                                        </div>
+                                        <div class="value">
+                                            <div class="value__label">Pres. cliente</div>
+                                            <div class="value__value">No</div>
+                                        </div>
+                                        <div class="value">
+                                            <div class="value__label">Qtà Fuori Toll.</div>
+                                            <div class="value__value">No</div>
+                                        </div>
+                                        <div class="value">
+                                            <div class="value__label">Checklist compilata</div>
+                                            <div class="value__value">No</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Stato -->
+                            <div class="main-bar__item status-tile flex">
+                                <div class="status-tile__wrapper flex">
+
+                                    <div class="status-tile__gauge">
+                                        <div class="canvas-container">
+                                            <canvas id="canvas-id"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <div class="status-tile__status">
+                                        <div class="flex--v" style="height:100%">
+
+                                            <div class="status-tile__icon">
+                                                <div id="status--icon__icon" class="status--icon__icon"
+                                                     data-sap-ui-type="sap.ui.core.Icon"
+                                                     data-color="#FFF"
+                                                     data-src="sap-icon://message-success"></div>
+                                            </div>
+
+                                            <div class="status-tile__label">
+                                                <span class="status-tile__label--error">Fermo Rispetto Qualità</span>
+                                                <span class="status-tile__label--success"
+                                                      style="display:none">In funzione</span>
+                                            </div>
+
+
+                                            <div class="status-tile__icon">&nbsp;8 min.</div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                            <!-- Grafici -->
+                            <div class="main-bar__item graph-tile">
+                                <div class="graph-tile--col-wide">
+                                    <div id="microchart"
+                                         data-sap-ui-type="sap.suite.ui.microchart.ComparisonMicroChart"
+                                         data-data="{path: '/macchina/chart'}"
+                                         data-scale="Km" data-size="L" data-width="100%" data-height="auto">
+                                        <div data-sap-ui-aggregation="data">
+                                            <div data-sap-ui-type="sap.suite.ui.microchart.ComparisonMicroChartData"
+                                                 data-title="{key}"
+                                                 data-value="{value}" data-color="{color}">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="graph-tile--col-narrow flex--v">
+                                    <div class="value">
+                                        <div class="value__label">Bobina in macchina</div>
+                                        <div class="value__value">4.224 Km</div>
+                                    </div>
+                                    <div class="value">
+                                        <div class="value__label">Quantità TAX</div>
+                                        <div class="value__value">NO</div>
+                                    </div>
+                                </div>
+                            </div>
+
+<!--                            <div class="main-bar__item">
+                                <div class="flex&#45;&#45;v" style="justify-content: space-between">
+
+                                    <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://activities"
+                                         data-text="Scelte"
+                                         data-width="100%"></div>
+                                    <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://customer-order-entry"
+                                         data-text="Ordini" data-width="100%"></div>
+                                    <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://action-settings"
+                                         data-type="Emphasized" data-text="Funzioni Ordine Attivo"
+                                         data-width="100%"></div>
+                                </div>
+                            </div>-->
+                        </div>
+                        <div class="table-wrapper">
+                            <div data-sap-ui-type="sap.m.Table" id="tabella">/div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
