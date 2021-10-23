@@ -26,6 +26,7 @@ sap.ui.define(
 
                 var macchina_data = new sap.ui.model.json.JSONModel();
                 this.getView().setModel(macchina_data, "scheda");
+                var i18n = this.getView().getModel('i18n');
 
                 var oType = new sap.ui.model.type.DateTime({source: {pattern: "yyyy-MM-dd HH:mm:ss Z"}});
                 var oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "MM/dd/yyyy"});
@@ -38,6 +39,9 @@ sap.ui.define(
                         () => {
 
                             var dati = macchina_data.getData()
+
+                            document.title = i18n.getResourceBundle().getText('title') + ' > ' + dati.nome
+
                             dati.columns.forEach((column, idx) => {
                                 t.addColumn(new sap.m.Column({
                                     header: new sap.m.Label({text: column.label}),
