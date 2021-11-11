@@ -4,18 +4,47 @@ sap.ui.define(
         "sap/ui/core/routing/History",
         "sap/ui/core/UIComponent",
         "it/horsa/gualapack/macchina/model/formatter",
-        "sap/ui/model/json/JSONModel"
+        "sap/ui/model/json/JSONModel",
+        "sap/m/Button",
+        "sap/m/Dialog",
+        "sap/m/List",
+        "sap/m/StandardListItem",
+        "sap/ui/layout/Grid",
     ],
-    function (Controller, History, UIComponent, formatter, JSONModel) {
+    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid) {
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
 
             onAfterRendering: function () {
 
+                this.actions();
                 this.gauge_init();
                 this.macchina_load_data('resources/stampa.json');
 
+            },
+            actions: function () {
+                const actions = [];
+                for (let i = 0; i < 10; i++) {
+                    actions.push({
+                        id: i,
+                        label: 'Azione personalizzata ' + i
+                    })
+                }
+
+                var azioni = new sap.ui.model.json.JSONModel({
+                    azioni: actions
+                });
+                this.getView().setModel(azioni, 'azioni');
+
+                const button_ordini = this.getView().byId('button-ordini');
+                const button_ordini_menu = new sap.m.Menu;
+                actions.forEach(a => {
+                    button_ordini_menu.addItem(new sap.m.MenuItem({
+                        text: a.label
+                    }))
+                })
+                button_ordini.setMenu(button_ordini_menu);
             },
             /**
              * Carica il file di dati json_file_path
@@ -99,7 +128,11 @@ sap.ui.define(
                                 }
 
                             });
-
+                            //  Inserisco gli status in maniera random
+                            const statuses = ['Success', 'Warning', 'Error', 'Information']
+                            dati.rows.forEach(d => {
+                                d.status = statuses[Math.floor(Math.random() * statuses.length)];
+                            })
                             //  Tabella
                             t.bindItems('/rows', new sap.m.ColumnListItem({
                                 cells: cells,
@@ -107,7 +140,6 @@ sap.ui.define(
                             }));
                             t.setModel(macchina_data);
                             // t.setAutoPopinMode(true)
-                            // t.setSticky(sap.m.Sticky.ColumnHeaders);
                             t.setFixedLayout(false);
 
                             //  Micorchart
@@ -210,7 +242,7 @@ sap.ui.define(
                     document.querySelector('.status-tile__label--success').style.display = 'block';
                 }
 
-                this.getView().byId('status--icon__icon').setSrc(icon_path);
+                // this.getView().byId('status--icon__icon').setSrc(icon_path);
 
             },
 
@@ -274,7 +306,40 @@ sap.ui.define(
                 } else {
                     this.getRouter().navTo("appHome", {}, true /*no history*/);
                 }
-            }
+            },
+
+            onDialogWithSizePress: function () {
+                if (!this.oFixedSizeDialog) {
+                    const button_template = new Button({
+                        text: '{azioni>label}',
+                        type: 'Emphasized'
+                    });
+                    const grid = new Grid({
+                        content: {
+                            path: 'azioni>/azioni',
+                            template: button_template
+                        }
+                    });
+
+                    this.oFixedSizeDialog = new Dialog({
+                        title: "Funzioni ordine attivo",
+                        // contentWidth: "80%",
+                        // contentHeight: "80%",
+                        content: grid,
+                        endButton: new Button({
+                            text: "Chiudi",
+                            press: function () {
+                                this.oFixedSizeDialog.close();
+                            }.bind(this)
+                        })
+                    });
+
+                    //to get access to the controller's model
+                    this.getView().addDependent(this.oFixedSizeDialog);
+                }
+
+                this.oFixedSizeDialog.open();
+            },
         });
     }
 );

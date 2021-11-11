@@ -7,10 +7,11 @@
                      data-text="Scelte"
                      >
                 </div>
-                <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://customer-order-entry"
-                     data-text="Ordini" >
+                <div id="button-ordini" data-sap-ui-type="sap.m.MenuButton" data-icon="sap-icon://customer-order-entry"
+                     data-text="Ordini">
                 </div>
                 <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://action-settings"
+                     data-press=".onDialogWithSizePress"
                      data-text="Funzioni Ordine Attivo">
                 </div>
             </div>
@@ -42,19 +43,39 @@
                                     <div class="info--col-narrow flex--v">
                                         <div class="value">
                                             <div class="value__label">Pers. ridotto</div>
-                                            <div class="value__value">Sì</div>
+                                            <div class="value__value value--success">
+                                                <span class="status--icon__icon"
+                                                       data-sap-ui-type="sap.ui.core.Icon"
+                                                       data-src="sap-icon://accept"></span>
+                                                Sì
+                                            </div>
                                         </div>
                                         <div class="value">
                                             <div class="value__label">Pres. cliente</div>
-                                            <div class="value__value">No</div>
+                                            <div class="value__value value--error">
+                                                <span class="status--icon__icon"
+                                                      data-sap-ui-type="sap.ui.core.Icon"
+                                                      data-src="sap-icon://decline"></span>
+                                                No
+                                            </div>
                                         </div>
                                         <div class="value">
                                             <div class="value__label">Qtà Fuori Toll.</div>
-                                            <div class="value__value">No</div>
+                                            <div class="value__value value--error">
+                                                <span class="status--icon__icon"
+                                                      data-sap-ui-type="sap.ui.core.Icon"
+                                                      data-src="sap-icon://decline"></span>
+                                                No
+                                            </div>
                                         </div>
                                         <div class="value">
                                             <div class="value__label">Checklist compilata</div>
-                                            <div class="value__value">No</div>
+                                            <div class="value__value value--error">
+                                                <span class="status--icon__icon"
+                                                      data-sap-ui-type="sap.ui.core.Icon"
+                                                      data-src="sap-icon://decline"></span>
+                                                No
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -72,12 +93,12 @@
                                     <div class="status-tile__status">
                                         <div class="flex--v" style="height:100%">
 
-                                            <div class="status-tile__icon">
-                                                <div id="status--icon__icon" class="status--icon__icon"
+                                            <!-- <div class="status-tile__icon">
+                                                <div id="status&#45;&#45;icon__icon" class="status&#45;&#45;icon__icon"
                                                      data-sap-ui-type="sap.ui.core.Icon"
                                                      data-color="#FFF"
                                                      data-src="sap-icon://message-success"></div>
-                                            </div>
+                                            </div>-->
 
                                             <div class="status-tile__label">
                                                 <span class="status-tile__label--error">Fermo Rispetto Qualità</span>
@@ -113,11 +134,21 @@
                                 <div class="graph-tile--col-narrow flex--v">
                                     <div class="value">
                                         <div class="value__label">Bobina in macchina</div>
-                                        <div class="value__value">4.224 Km</div>
+                                        <div class="value__value">
+<!--                                           <span class="status&#45;&#45;icon__icon"-->
+<!--                                                 data-sap-ui-type="sap.ui.core.Icon"-->
+<!--                                                 data-src="sap-icon://information"></span>-->
+                                            4.224 Km
+                                        </div>
                                     </div>
                                     <div class="value">
                                         <div class="value__label">Quantità TAX</div>
-                                        <div class="value__value">NO</div>
+                                        <div class="value__value value--error">
+                                           <span class="status--icon__icon"
+                                                 data-sap-ui-type="sap.ui.core.Icon"
+                                                 data-src="sap-icon://decline"></span>
+                                            NO
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +168,10 @@
                             </div>-->
                         </div>
                         <div class="table-wrapper">
-                            <div data-sap-ui-type="sap.m.Table" id="tabella">/div>
+                            <div
+                                data-sap-ui-type="sap.m.Table"
+                                data-sticky="ColumnHeaders"
+                                id="tabella"></div>
                         </div>
                     </div>
                 </div>

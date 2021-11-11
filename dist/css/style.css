@@ -110,7 +110,7 @@
 }
 
 .status-tile__status .flex--v {
-    justify-content: space-evenly;
+    justify-content: center;
 }
 
 .status-tile__icon, .status-tile__label {
@@ -157,4 +157,30 @@ canvas {
 .value__value {
     font-size: 1.5em;
     flex: 1 1 100%;
+    font-weight: bold;
+    color: #4d4d4d;
+}
+
+.value--success {
+    color: rgb(63, 164, 91);
+}
+
+.value--error {
+    color: rgb(204, 0, 0);
+}
+
+.sapMListTbl {
+    border: 1px solid #CCC;
+    border-top: 0;
+    /*border-left: 0;*/
+    margin-bottom: 0.5em;
+}
+
+.sapMListTblHeader th{
+    border-bottom: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+}
+
+.sapMListTblCell {
+    border-left: 1px solid #CCC;
 }
