@@ -136,11 +136,18 @@ sap.ui.define(
                             //  Tabella
                             t.bindItems('/rows', new sap.m.ColumnListItem({
                                 cells: cells,
-                                highlight: '{= ${status}}'
+                                highlight: '{= ${status}}',
+                                //  Custom data per colorare righe
+                                // customData: {
+                                //     key: 'status',
+                                //     value: '{= ${status}}',
+                                //     writeToDom: true
+                                // }
                             }));
                             t.setModel(macchina_data);
                             // t.setAutoPopinMode(true)
                             t.setFixedLayout(false);
+                            t.setAlternateRowColors(true);
 
                             //  Micorchart
                             var m = this.getView().byId('microchart');
