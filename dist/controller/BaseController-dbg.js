@@ -18,31 +18,27 @@ sap.ui.define(
 
             onAfterRendering: function () {
 
-                this.actions();
                 this.gauge_init();
                 this.macchina_load_data('resources/stampa.json');
 
             },
             actions: function () {
-                const actions = [];
-                for (let i = 0; i < 10; i++) {
-                    actions.push({
-                        id: i,
-                        label: 'Azione personalizzata ' + i
-                    })
-                }
-
-                var azioni = new sap.ui.model.json.JSONModel({
-                    azioni: actions
-                });
-                this.getView().setModel(azioni, 'azioni');
+                var azioni = this.getModel('scheda').getProperty('/ordini')
 
                 const button_ordini = this.getView().byId('button-ordini');
                 const button_ordini_menu = new sap.m.Menu;
-                actions.forEach(a => {
-                    button_ordini_menu.addItem(new sap.m.MenuItem({
-                        text: a.label
-                    }))
+                azioni.forEach(a => {
+                    const mnu = {
+                        text: a.text
+                    }
+                    if (a.hasOwnProperty('children')) {
+                        mnu.items = a.children.map(child => {
+                            return {
+                                text: child
+                            }
+                        })
+                    }
+                    button_ordini_menu.addItem(new sap.m.MenuItem(mnu))
                 })
                 button_ordini.setMenu(button_ordini_menu);
             },
@@ -155,6 +151,8 @@ sap.ui.define(
 
                             // var ml = this.getView().byId('macchina-list');
                             // ml.setModel(macchina_data)
+
+                            this.actions();
 
                         }
                     )
@@ -318,12 +316,13 @@ sap.ui.define(
             onDialogWithSizePress: function () {
                 if (!this.oFixedSizeDialog) {
                     const button_template = new Button({
-                        text: '{azioni>label}',
-                        type: 'Emphasized'
+                        text: '{scheda>text}',
+                        // type: 'Emphasized',
+                        width: '100%'
                     });
                     const grid = new Grid({
                         content: {
-                            path: 'azioni>/azioni',
+                            path: 'scheda>/funzioni',
                             template: button_template
                         }
                     });

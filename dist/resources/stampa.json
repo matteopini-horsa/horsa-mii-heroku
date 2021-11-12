@@ -1600,5 +1600,83 @@
       "km_tot_residui": "60.86",
       "toll_neg": "12.91"
     }
+  ],
+  "ordini": [
+    {
+      "text": "Ordine",
+      "children": [
+        "Apertura ordine",
+        "Chiusura ordine"
+      ]
+    }, {
+      "text": "Chiusura fase",
+      "children": [
+        "Pre chiusura fase", "Annulla pre chiusura fase"
+      ]
+    }, {
+      "text": "Annulla re chiusura fase"
+    }, {
+      "text": "Personale",
+      "children": ["Personale ridotto", "Personale completo"]
+    }, {
+      "text": "Presenza cliente"
+    }, {
+      "text": "Segnalazione giunta"
+    }, {
+      "text": "Modal.rilevamento qtà"
+    }, {
+      "text": "Operatore su CDL",
+      "children": [
+        "Entrata operatore su CDL", "Uscita operatore su CDL"]
+    }
+  ],
+  "funzioni": [
+    {
+      "text": "A01 Rottura materiale"
+    },    {
+      "text": "A02 Cambi"
+    },    {
+      "text": "B00 Preparazione macchina"
+    },    {
+      "text": "B03 Smontaggio macchina"
+    },    {
+      "text": "C00 Guasti"
+    },    {
+      "text": "C01 Mancanza/Attesa"
+    },    {
+      "text": "C02 Lavaggio/Spazzolatura"
+    },    {
+      "text": "C03 Ritocco cilindri"
+    },    {
+      "text": "C04 Scromatura/Ricromatura"
+    },    {
+      "text": "C05 Imianti difettosi"
+    },    {
+      "text": "C06 Pausa"
+    },    {
+      "text": "C07 Pulizia"
+    },    {
+      "text": "C08 Fermo rispetto qualità"
+    },    {
+      "text": "C11 Macchina inattiva"
+    },    {
+      "text": "C12 Materia prima difettosa"
+    },    {
+      "text": "100 Avviamento (SI PRELIEVI)"
+    },    {
+      "text": "105 Avviamento inizio consumo vero"
+    },    {
+      "text": "110 Avviamento (NO PRELIEVI)"
+    },    {
+      "text": "220 Fermo per guasto meccanico"
+    },    {
+      "text": "221 Fermo per guasto elettrico"
+    },    {
+      "text": "268 ATTESA CILINDRI"
+    },    {
+      "text": "269 ATTESA CARRELLISTA"
+    },    {
+      "text": "556 Materiale da verificare"
+    }
   ]
 }
