@@ -10,8 +10,9 @@ sap.ui.define(
         "sap/m/List",
         "sap/m/StandardListItem",
         "sap/ui/layout/Grid",
+        "sap/m/FlexBox",
     ],
-    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid) {
+    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid, FlexBox) {
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
@@ -23,24 +24,24 @@ sap.ui.define(
 
             },
             actions: function () {
-                var azioni = this.getModel('scheda').getProperty('/ordini')
-
-                const button_ordini = this.getView().byId('button-ordini');
-                const button_ordini_menu = new sap.m.Menu;
-                azioni.forEach(a => {
-                    const mnu = {
-                        text: a.text
-                    }
-                    if (a.hasOwnProperty('children')) {
-                        mnu.items = a.children.map(child => {
-                            return {
-                                text: child
-                            }
-                        })
-                    }
-                    button_ordini_menu.addItem(new sap.m.MenuItem(mnu))
-                })
-                button_ordini.setMenu(button_ordini_menu);
+                // var azioni = this.getModel('scheda').getProperty('/ordini')
+                //
+                // const button_ordini = this.getView().byId('button-ordini');
+                // const button_ordini_menu = new sap.m.Menu;
+                // azioni.forEach(a => {
+                //     const mnu = {
+                //         text: a.text
+                //     }
+                //     if (a.hasOwnProperty('children')) {
+                //         mnu.items = a.children.map(child => {
+                //             return {
+                //                 text: child
+                //             }
+                //         })
+                //     }
+                //     button_ordini_menu.addItem(new sap.m.MenuItem(mnu))
+                // })
+                // button_ordini.setMenu(button_ordini_menu);
             },
             /**
              * Carica il file di dati json_file_path
@@ -313,18 +314,57 @@ sap.ui.define(
                 }
             },
 
-            onDialogWithSizePress: function () {
+            menuTTS: function () {
                 if (!this.oFixedSizeDialog) {
-                    const button_template = new Button({
-                        text: '{scheda>text}',
-                        // type: 'Emphasized',
-                        width: '100%'
-                    });
-                    const grid = new Grid({
-                        content: {
-                            path: 'scheda>/funzioni',
-                            template: button_template
-                        }
+                    const button_template = (type) => {
+
+                        return new Button({
+                            text: '{scheda>text}',
+                            type: type || 'Default',
+                            width: '100%'
+                        })
+                    };
+
+                    const ordini = new sap.ui.layout.FixFlex({
+                        fixContent: [
+                            new sap.m.Title({
+                                text: 'Ordini',
+                                level: 'H1'
+                            })
+                                .addStyleClass('grid_title'),
+                            new Grid({
+                                defaultSpan: 'XL6 L6 M12 S12',
+                                content: {
+                                    path: 'scheda>/ordini',
+                                    template: button_template()
+                                }
+                            })
+                        ]
+                    }).addStyleClass('ordini_bg');
+
+                    const funzioni = new sap.ui.layout.FixFlex({
+                        fixContent: [
+                            new sap.m.Title({
+                                text: 'Funzioni',
+                                level: 'H1'
+                            })
+                                .addStyleClass('grid_title'),
+                            new Grid({
+                                defaultSpan: 'XL4 L4 M6 S12',
+                                content: {
+                                    path: 'scheda>/funzioni',
+                                    template: button_template()
+                                }
+                            })
+                        ]
+                    }).addStyleClass('funzioni_bg')
+
+                    const flex = [
+                        ordini,
+                        funzioni
+                    ];
+                    const grid = new FlexBox({
+                        items: flex
                     });
 
                     this.oFixedSizeDialog = new Dialog({

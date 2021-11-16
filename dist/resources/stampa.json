@@ -1601,7 +1601,7 @@
       "toll_neg": "12.91"
     }
   ],
-  "ordini": [
+  "ordini_": [
     {
       "text": "Ordine",
       "children": [
@@ -1624,10 +1624,35 @@
       "text": "Segnalazione giunta"
     }, {
       "text": "Modal.rilevamento qtà"
-    }, {
+    },{
       "text": "Operatore su CDL",
       "children": [
         "Entrata operatore su CDL", "Uscita operatore su CDL"]
+    }
+  ],
+  "ordini": [
+    {
+      "text": "Apertura ordine"
+    }, {
+      "text": "Chiusura ordine"
+    }, {
+      "text": "Pre chiusura fase"
+    }, {
+      "text": "Annulla pre chiusura fase"
+    },{
+      "text": "Personale ridotto"
+    }, {
+      "text": "Personale completo"
+    }, {
+      "text": "Presenza cliente"
+    }, {
+      "text": "Segnalazione giunta"
+    }, {
+      "text": "Modal.rilevamento qtà"
+    }, {}, {
+      "text": "Entrata operatore su CDL"
+    }, {
+      "text": "Uscita operatore su CDL"
     }
   ],
   "funzioni": [
