@@ -5,21 +5,13 @@ sap.ui.define(
     function (JSONModel) {
         let init = false;
         const services = new sap.ui.model.json.JSONModel();
-        const queque = [];
-        setTimeout(() =>
         services.loadData(`resources/services.json`)
             .then(
                 () => {
                     init = true;
                     console.log(`%c `, `border:1px solid red;color:red;padding:2px 4px;`, `init`, init, queque.length);
-                    if (queque.length) {
-                        queque.forEach(q => {
-                            return q()
-                        })
-                    }
                 }
             )
-            ,5000)
 
         function get_service(service_name) {
 
@@ -81,32 +73,6 @@ sap.ui.define(
 
                 })()
 
-                // if (!init) {
-                //     const promise = () => new Promise((resolve, reject) => {
-                //         console.log(`%cget `, `border:1px solid purple;color:purple;padding:2px 4px;`, `service_name`, service_name);
-                //         resolve(get(service_name))
-                //     })
-                //     queque.push(promise);
-                //     // return promise;
-                //     return promise;
-                // }
-
-                // let o;
-                // // if (document.location.hostname === 'localhost') {
-                // //     o = get_service(service_name);
-                // // } else {
-                // o = get_file(service_name);
-                // // }
-                //
-                // const request = new XMLHttpRequest();
-                // request.open(o.method, o.path, false);
-                // request.send(null);
-                // const data = JSON.parse(request.responseText);
-                //
-                //
-                // // return new Promise((resolve, reject) => {
-                //     resolve(data)
-                // // });
             })
 
 
