@@ -9,7 +9,6 @@ sap.ui.define(
             .then(
                 () => {
                     init = true;
-                    console.log(`%c `, `border:1px solid red;color:red;padding:2px 4px;`, `init`, init, queque.length);
                 }
             )
 
@@ -74,8 +73,6 @@ sap.ui.define(
                 })()
 
             })
-
-
 
         }
 
