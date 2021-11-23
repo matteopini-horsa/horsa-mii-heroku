@@ -5,6 +5,7 @@
             <div data-sap-ui-aggregation="headerContent">
                 <div data-sap-ui-type="sap.m.Button" data-icon="sap-icon://activities"
                      data-text="Scelte"
+                     data-press=".estrusione"
                      >
                 </div>
                 <div id="button-ordini"
@@ -17,7 +18,7 @@
                      data-text="Funzioni Ordine Attivo">
                 </div>
             </div>
-
+<!--            <a href="/estrusione">test</a>-->
             <div data-sap-ui-aggregation="content">
                 <div class="page-wrapper">
                     <div class="page-content">
@@ -83,7 +84,7 @@
                                 </div>
                             </div>
                             <!-- Stato -->
-                            <div class="main-bar__item status-tile flex">
+                            <div id="status-tile" class="main-bar__item status-tile flex">
                                 <div class="status-tile__wrapper flex">
 
                                     <div class="status-tile__gauge">
@@ -137,9 +138,6 @@
                                     <div class="value">
                                         <div class="value__label">Bobina in macchina</div>
                                         <div class="value__value">
-<!--                                           <span class="status&#45;&#45;icon__icon"-->
-<!--                                                 data-sap-ui-type="sap.ui.core.Icon"-->
-<!--                                                 data-src="sap-icon://information"></span>-->
                                             4.224 Km
                                         </div>
                                     </div>

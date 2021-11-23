@@ -1,0 +1,194 @@
+{
+  "nome": "ROTOC.ROTOMEC 9R2",
+  "stazione": {
+    "info": [
+      {
+        "key": "Ordine produzione",
+        "value": "J2003328"
+      },
+      {
+        "key": "Fase",
+        "value": "001003"
+      },
+      {
+        "key": "Operatore",
+        "value": "Guasti Manuel"
+      }
+    ],
+    "data": [
+      {
+        "key": "Pers. cliente",
+        "value": false
+      },
+      {
+        "key": "Pres. ridotto",
+        "value": true
+      },
+      {
+        "key": "Qtà fuori Toll.",
+        "value": 4.224
+      },
+      {
+        "key": "Checklist compilata",
+        "value": false
+      }
+    ]
+  },
+  "status": {
+    "error": "Fermo rispetto qualità",
+    "time": "8 min."
+  },
+  "macchina": {
+    "chart": [
+      {
+        "key": "Km richiesti",
+        "value": 40.572,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km mancanti",
+        "value": 30.272,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km buoni",
+        "value": 10.3,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km da ribobinare",
+        "value": 0,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km scarto",
+        "value": 0,
+        "um": "Km",
+        "color": "Good"
+      },
+      {
+        "key": "Km avviamento",
+        "value": 2.44,
+        "um": "Km",
+        "color": "Good"
+      }
+    ],
+    "info": [
+      {
+        "key": "Km bobina in macchina",
+        "value": 4224
+      },
+      {
+        "key": "Quantità TAX",
+        "value": 11
+      }
+    ]
+  },
+  "ordini_": [
+    {
+      "text": "Ordine",
+      "children": [
+        "Apertura ordine",
+        "Chiusura ordine"
+      ]
+    }, {
+      "text": "Chiusura fase",
+      "children": [
+        "Pre chiusura fase", "Annulla pre chiusura fase"
+      ]
+    }, {
+      "text": "Annulla re chiusura fase"
+    }, {
+      "text": "Personale",
+      "children": ["Personale ridotto", "Personale completo"]
+    }, {
+      "text": "Presenza cliente"
+    }, {
+      "text": "Segnalazione giunta"
+    }, {
+      "text": "Modal.rilevamento qtà"
+    },{
+      "text": "Operatore su CDL",
+      "children": [
+        "Entrata operatore su CDL", "Uscita operatore su CDL"]
+    }
+  ],
+  "ordini": [
+    {
+      "text": "Apertura ordine"
+    }, {
+      "text": "Chiusura ordine"
+    }, {
+      "text": "Pre chiusura fase"
+    }, {
+      "text": "Annulla pre chiusura fase"
+    },{
+      "text": "Personale ridotto"
+    }, {
+      "text": "Personale completo"
+    }, {
+      "text": "Presenza cliente"
+    }, {
+      "text": "Segnalazione giunta"
+    }, {
+      "text": "Modal.rilevamento qtà"
+    }, {}, {
+      "text": "Entrata operatore su CDL"
+    }, {
+      "text": "Uscita operatore su CDL"
+    }
+  ],
+  "funzioni": [
+    {
+      "text": "A01 Rottura materiale"
+    },    {
+      "text": "A02 Cambi"
+    },    {
+      "text": "B00 Preparazione macchina"
+    },    {
+      "text": "B03 Smontaggio macchina"
+    },    {
+      "text": "C00 Guasti"
+    },    {
+      "text": "C01 Mancanza/Attesa"
+    },    {
+      "text": "C02 Lavaggio/Spazzolatura"
+    },    {
+      "text": "C03 Ritocco cilindri"
+    },    {
+      "text": "C04 Scromatura/Ricromatura"
+    },    {
+      "text": "C05 Imianti difettosi"
+    },    {
+      "text": "C06 Pausa"
+    },    {
+      "text": "C07 Pulizia"
+    },    {
+      "text": "C08 Fermo rispetto qualità"
+    },    {
+      "text": "C11 Macchina inattiva"
+    },    {
+      "text": "C12 Materia prima difettosa"
+    },    {
+      "text": "100 Avviamento (SI PRELIEVI)"
+    },    {
+      "text": "105 Avviamento inizio consumo vero"
+    },    {
+      "text": "110 Avviamento (NO PRELIEVI)"
+    },    {
+      "text": "220 Fermo per guasto meccanico"
+    },    {
+      "text": "221 Fermo per guasto elettrico"
+    },    {
+      "text": "268 ATTESA CILINDRI"
+    },    {
+      "text": "269 ATTESA CARRELLISTA"
+    },    {
+      "text": "556 Materiale da verificare"
+    }
+  ]
+}

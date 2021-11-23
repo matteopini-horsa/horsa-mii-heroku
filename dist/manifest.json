@@ -80,6 +80,10 @@
           "name": "RouteMainView",
           "pattern": "RouteMainView",
           "target": ["TargetMainView"]
+        }, {
+          "name": "estrusione",
+          "pattern": "estrusione",
+          "target": ["TargetMainView2"]
         }
       ],
       "targets": {
@@ -87,6 +91,12 @@
           "viewType": "XML",
           "viewLevel": 1,
           "viewId": "idAppControl",
+          "viewName": "MainView"
+        },
+        "TargetMainView2": {
+          "viewType": "HTML",
+          "viewLevel": 1,
+          "viewId": "idAppControl2",
           "viewName": "MainView"
         }
       }

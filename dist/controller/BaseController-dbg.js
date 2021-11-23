@@ -11,153 +11,195 @@ sap.ui.define(
         "sap/m/StandardListItem",
         "sap/ui/layout/Grid",
         "sap/m/FlexBox",
+        "./SqlFieldType",
+        "./MesServices"
     ],
-    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid, FlexBox) {
+    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid, FlexBox, SqlFieldType, MesServices) {
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
-
+            estrusione: function (oEvent) {
+                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("estrusione");
+            },
             onAfterRendering: function () {
 
+                MesServices('orders')
+                    .then(
+                        (orders_data) => this.ordini(orders_data)
+                    );
+
+                MesServices('stampa')
+                    .then(
+                        (cdl_data) => this.cdl(cdl_data)
+                    )
+
+
+                let hash = document.location.hash.split('/').pop();
+                hash = hash || 'stampa';
                 this.gauge_init();
-                this.macchina_load_data('resources/stampa.json');
 
             },
-            actions: function () {
-                // var azioni = this.getModel('scheda').getProperty('/ordini')
-                //
-                // const button_ordini = this.getView().byId('button-ordini');
-                // const button_ordini_menu = new sap.m.Menu;
-                // azioni.forEach(a => {
-                //     const mnu = {
-                //         text: a.text
-                //     }
-                //     if (a.hasOwnProperty('children')) {
-                //         mnu.items = a.children.map(child => {
-                //             return {
-                //                 text: child
-                //             }
-                //         })
-                //     }
-                //     button_ordini_menu.addItem(new sap.m.MenuItem(mnu))
-                // })
-                // button_ordini.setMenu(button_ordini_menu);
-            },
-            /**
-             * Carica il file di dati json_file_path
-             * crea le colonne ed esegue il bind dei dati
-             * @param json_file_path
-             */
-            macchina_load_data: function (json_file_path) {
+            ordini: function(orders_data) {
 
-                var macchina_data = new sap.ui.model.json.JSONModel();
-                this.getView().setModel(macchina_data, "scheda");
-                var i18n = this.getView().getModel('i18n');
-
-                var oType = new sap.ui.model.type.DateTime({source: {pattern: "yyyy-MM-dd HH:mm:ss Z"}});
-                var oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "MM/dd/yyyy"});
+                const tab_columns = [];
+                const orders = new sap.ui.model.json.JSONModel();
+                orders.setData(orders_data);
+                this.getView().setModel(orders, "ordini");
 
                 var t = this.getView().byId('tabella');
-                const cells = [];
 
-                macchina_data.loadData(json_file_path)
-                    .then(
-                        () => {
+                orders_data.Rowsets.Rowset[0].Columns.Column.forEach((column, idx) => {
 
-                            var dati = macchina_data.getData()
+                    //  Creazione colonna
+                    t.addColumn(new sap.m.Column({
+                        header: new sap.m.Label({text: column.Name}),
+                        hAlign: (column.SQLDataType >= 3 && column.SQLDataType < 10) ? 'Right' : 'Left'
+                    }))
 
-                            document.title = i18n.getResourceBundle().getText('title') + ' > ' + dati.nome
+                    //  Definizione tipi colonna
+                    tab_columns.push(SqlFieldType(column));
 
-                            dati.columns.forEach((column, idx) => {
-                                t.addColumn(new sap.m.Column({
-                                    header: new sap.m.Label({text: column.label}),
-                                    // minScreenWidth: 'Desktop',
-                                    // demandPopin: idx > 5
-                                }))
+                });
 
-                                switch (column.type) {
+                //  Tabella
+                t.setModel(orders);
+                t.bindItems('/Rowsets/Rowset/0/Row', new sap.m.ColumnListItem({
+                    cells: tab_columns
+                }));
 
-                                    case 'boolean':
-                                        cells.push(new sap.ui.core.Icon({
-                                            src: {
-                                                path: column.template,
-                                                formatter: function (v) {
-                                                    if (v) {
-                                                        return 'sap-icon://accept'
-                                                    } else if (v === false) {
-                                                        return 'sap-icon://decline'
-                                                    }
-                                                }
-                                            },
-                                            color: {
-                                                path: column.template,
-                                                formatter: function (v) {
-                                                    if (v) {
-                                                        return '#3fa45b'
-                                                    } else if (v === false) {
-                                                        return '#C00'
-                                                    } else {
-                                                        return ''
-                                                    }
-                                                }
-                                            }
+                t.setFixedLayout(false);
+                t.setAlternateRowColors(true);
 
-                                        }))
-                                        break;
-
-                                    case 'date':
-                                        cells.push(new sap.m.Text({
-                                            text: {
-                                                path: column.template,
-                                                formatter: function (d) {
-                                                    return d ? oDateFormat.format(new Date(d)) : null;
-                                                },
-                                                wrapping: false
-                                            }
-                                        }))
-                                        break;
-
-                                    default:
-                                        cells.push(new sap.m.Text({
-                                            text: "{" + column.template + "}",
-                                            wrapping: false
-                                        }))
-                                }
-
-                            });
-                            //  Inserisco gli status in maniera random
-                            const statuses = ['Success', 'Warning', 'Error', 'Information']
-                            dati.rows.forEach(d => {
-                                d.status = statuses[Math.floor(Math.random() * statuses.length)];
-                            })
-                            //  Tabella
-                            t.bindItems('/rows', new sap.m.ColumnListItem({
-                                cells: cells,
-                                highlight: '{= ${status}}',
-                                //  Custom data per colorare righe
-                                // customData: {
-                                //     key: 'status',
-                                //     value: '{= ${status}}',
-                                //     writeToDom: true
-                                // }
-                            }));
-                            t.setModel(macchina_data);
-                            // t.setAutoPopinMode(true)
-                            t.setFixedLayout(false);
-                            t.setAlternateRowColors(true);
-
-                            //  Micorchart
-                            var m = this.getView().byId('microchart');
-                            m.setModel(macchina_data)
-
-                            // var ml = this.getView().byId('macchina-list');
-                            // ml.setModel(macchina_data)
-
-                            this.actions();
-
-                        }
-                    )
             },
+            cdl: function(cdl_data) {
+
+                const cdl = new sap.ui.model.json.JSONModel();
+                cdl.setData(cdl_data);
+                this.getView().setModel(cdl, "scheda");
+
+                const i18n = this.getView().getModel('i18n');
+                document.title = i18n.getResourceBundle().getText('title') + ' > ' + cdl_data.nome
+
+                //  Micorchart
+                var m = this.getView().byId('microchart');
+                m.setModel(cdl)
+            },
+//             /**
+//              * Carica il file di dati json_file_path
+//              * crea le colonne ed esegue il bind dei dati
+//              * @param json_file_path
+//              */
+//             macchina_load_data: function (json_file_path) {
+//
+//                 var macchina_data = new sap.ui.model.json.JSONModel();
+//                 this.getView().setModel(macchina_data, "scheda");
+//                 var i18n = this.getView().getModel('i18n');
+//
+//                 var oType = new sap.ui.model.type.DateTime({source: {pattern: "yyyy-MM-dd HH:mm:ss Z"}});
+//                 var oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "MM/dd/yyyy"});
+//
+//                 var t = this.getView().byId('tabella');
+//                 const cells = [];
+//
+//                 macchina_data.loadData(json_file_path)
+//                     .then(
+//                         () => {
+//
+//                             var dati = macchina_data.getData()
+//
+//                             document.title = i18n.getResourceBundle().getText('title') + ' > ' + dati.nome
+// /*
+//                             dati.columns.forEach((column, idx) => {
+//                                 t.addColumn(new sap.m.Column({
+//                                     header: new sap.m.Label({text: column.label}),
+//                                     // minScreenWidth: 'Desktop',
+//                                     // demandPopin: idx > 5
+//                                 }))
+//
+//                                 switch (column.type) {
+//
+//                                     case 'boolean':
+//                                         cells.push(new sap.ui.core.Icon({
+//                                             src: {
+//                                                 path: column.template,
+//                                                 formatter: function (v) {
+//                                                     if (v) {
+//                                                         return 'sap-icon://accept'
+//                                                     } else if (v === false) {
+//                                                         return 'sap-icon://decline'
+//                                                     }
+//                                                 }
+//                                             },
+//                                             color: {
+//                                                 path: column.template,
+//                                                 formatter: function (v) {
+//                                                     if (v) {
+//                                                         return '#3fa45b'
+//                                                     } else if (v === false) {
+//                                                         return '#C00'
+//                                                     } else {
+//                                                         return ''
+//                                                     }
+//                                                 }
+//                                             }
+//
+//                                         }))
+//                                         break;
+//
+//                                     case 'date':
+//                                         cells.push(new sap.m.Text({
+//                                             text: {
+//                                                 path: column.template,
+//                                                 formatter: function (d) {
+//                                                     return d ? oDateFormat.format(new Date(d)) : null;
+//                                                 },
+//                                                 wrapping: false
+//                                             }
+//                                         }))
+//                                         break;
+//
+//                                     default:
+//                                         cells.push(new sap.m.Text({
+//                                             text: "{" + column.template + "}",
+//                                             wrapping: false
+//                                         }))
+//                                 }
+//
+//                             });
+//                             //  Inserisco gli status in maniera random
+//                             const statuses = ['Success', 'Warning', 'Error', 'Information']
+//                             dati.rows.forEach(d => {
+//                                 d.status = statuses[Math.floor(Math.random() * statuses.length)];
+//                             })
+//                             //  Tabella
+//                             t.bindItems('/rows', new sap.m.ColumnListItem({
+//                                 cells: cells,
+//                                 highlight: '{= ${status}}',
+//                                 //  Custom data per colorare righe
+//                                 // customData: {
+//                                 //     key: 'status',
+//                                 //     value: '{= ${status}}',
+//                                 //     writeToDom: true
+//                                 // }
+//                             }));
+//                             t.setModel(macchina_data);
+//                             // t.setAutoPopinMode(true)
+//                             t.setFixedLayout(false);
+//                             t.setAlternateRowColors(true);
+// */
+//                             //  Micorchart
+//                             var m = this.getView().byId('microchart');
+//                             m.setModel(macchina_data)
+//
+//                             // var ml = this.getView().byId('macchina-list');
+//                             // ml.setModel(macchina_data)
+//
+//                             // this.actions();
+//
+//                         }
+//                     )
+//             },
             /**
              * Inizializzazione e render del gauge
              */
