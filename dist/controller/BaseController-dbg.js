@@ -26,7 +26,8 @@ sap.ui.define(
 
                 MesServices('orders')
                     .then(
-                        (orders_data) => this.ordini(orders_data)
+                        (orders_data) => this.ordini(orders_data),
+                        (err) => console.log(`%cBaseController `, `border:1px solid gold;color:gold;padding:2px 4px;`, `err`, err)
                     );
 
                 MesServices('stampa')
@@ -41,7 +42,7 @@ sap.ui.define(
 
             },
             ordini: function(orders_data) {
-
+                console.log(`%cBaseController ordini`, `border:1px solid black;color:black;padding:2px 4px;`, `orders_data`, orders_data);
                 const tab_columns = [];
                 const orders = new sap.ui.model.json.JSONModel();
                 orders.setData(orders_data);

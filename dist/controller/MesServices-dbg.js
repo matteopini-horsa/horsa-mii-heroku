@@ -5,13 +5,21 @@ sap.ui.define(
     function (JSONModel) {
         let init = false;
         const services = new sap.ui.model.json.JSONModel();
-
+        const queque = [];
+        setTimeout(() =>
         services.loadData(`resources/services.json`)
             .then(
                 () => {
-                    init = true
+                    init = true;
+                    console.log(`%c `, `border:1px solid red;color:red;padding:2px 4px;`, `init`, init, queque.length);
+                    if (queque.length) {
+                        queque.forEach(q => {
+                            return q()
+                        })
+                    }
                 }
             )
+            ,5000)
 
         function get_service(service_name) {
 
@@ -46,30 +54,65 @@ sap.ui.define(
         }
 
         //  Crea il template delle colonne in base al tipo di colonna definito da SQLDataType
-        return function (service_name) {
-
-            if (!init) {
-                return;
-            }
-
-            let o;
-            // if (document.location.hostname === 'localhost') {
-            //     o = get_service(service_name);
-            // } else {
-                o = get_file(service_name);
-            // }
-
-            const request = new XMLHttpRequest();
-            request.open(o.method, o.path, false);
-            request.send(null);
-            const data = JSON.parse(request.responseText);
-
-
+        function get(service_name) {
             return new Promise((resolve, reject) => {
-                resolve(data)
-            });
+                (function resolve_service() {
+
+                    if (init) {
+                        let o;
+                        // if (document.location.hostname === 'localhost') {
+                        //     o = get_service(service_name);
+                        // } else {
+                        o = get_file(service_name);
+                        // }
+
+                        const request = new XMLHttpRequest();
+                        request.open(o.method, o.path, false);
+                        request.send(null);
+                        const data = JSON.parse(request.responseText);
+
+
+                        // return new Promise((resolve, reject) => {
+                        resolve(data)
+                        // });
+                    }
+
+                    setTimeout(resolve_service, 1000)
+
+                })()
+
+                // if (!init) {
+                //     const promise = () => new Promise((resolve, reject) => {
+                //         console.log(`%cget `, `border:1px solid purple;color:purple;padding:2px 4px;`, `service_name`, service_name);
+                //         resolve(get(service_name))
+                //     })
+                //     queque.push(promise);
+                //     // return promise;
+                //     return promise;
+                // }
+
+                // let o;
+                // // if (document.location.hostname === 'localhost') {
+                // //     o = get_service(service_name);
+                // // } else {
+                // o = get_file(service_name);
+                // // }
+                //
+                // const request = new XMLHttpRequest();
+                // request.open(o.method, o.path, false);
+                // request.send(null);
+                // const data = JSON.parse(request.responseText);
+                //
+                //
+                // // return new Promise((resolve, reject) => {
+                //     resolve(data)
+                // // });
+            })
+
 
 
         }
+
+        return get
     }
 )
