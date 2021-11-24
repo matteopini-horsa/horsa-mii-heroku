@@ -41,8 +41,8 @@ sap.ui.define(
                 this.gauge_init();
 
             },
-            ordini: function(orders_data) {
-                console.log(`%cBaseController ordini`, `border:1px solid black;color:black;padding:2px 4px;`, `orders_data`, orders_data);
+            ordini: function (orders_data) {
+
                 const tab_columns = [];
                 const orders = new sap.ui.model.json.JSONModel();
                 orders.setData(orders_data);
@@ -73,7 +73,7 @@ sap.ui.define(
                 t.setAlternateRowColors(true);
 
             },
-            cdl: function(cdl_data) {
+            cdl: function (cdl_data) {
 
                 const cdl = new sap.ui.model.json.JSONModel();
                 cdl.setData(cdl_data);
@@ -86,121 +86,6 @@ sap.ui.define(
                 var m = this.getView().byId('microchart');
                 m.setModel(cdl)
             },
-//             /**
-//              * Carica il file di dati json_file_path
-//              * crea le colonne ed esegue il bind dei dati
-//              * @param json_file_path
-//              */
-//             macchina_load_data: function (json_file_path) {
-//
-//                 var macchina_data = new sap.ui.model.json.JSONModel();
-//                 this.getView().setModel(macchina_data, "scheda");
-//                 var i18n = this.getView().getModel('i18n');
-//
-//                 var oType = new sap.ui.model.type.DateTime({source: {pattern: "yyyy-MM-dd HH:mm:ss Z"}});
-//                 var oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "MM/dd/yyyy"});
-//
-//                 var t = this.getView().byId('tabella');
-//                 const cells = [];
-//
-//                 macchina_data.loadData(json_file_path)
-//                     .then(
-//                         () => {
-//
-//                             var dati = macchina_data.getData()
-//
-//                             document.title = i18n.getResourceBundle().getText('title') + ' > ' + dati.nome
-// /*
-//                             dati.columns.forEach((column, idx) => {
-//                                 t.addColumn(new sap.m.Column({
-//                                     header: new sap.m.Label({text: column.label}),
-//                                     // minScreenWidth: 'Desktop',
-//                                     // demandPopin: idx > 5
-//                                 }))
-//
-//                                 switch (column.type) {
-//
-//                                     case 'boolean':
-//                                         cells.push(new sap.ui.core.Icon({
-//                                             src: {
-//                                                 path: column.template,
-//                                                 formatter: function (v) {
-//                                                     if (v) {
-//                                                         return 'sap-icon://accept'
-//                                                     } else if (v === false) {
-//                                                         return 'sap-icon://decline'
-//                                                     }
-//                                                 }
-//                                             },
-//                                             color: {
-//                                                 path: column.template,
-//                                                 formatter: function (v) {
-//                                                     if (v) {
-//                                                         return '#3fa45b'
-//                                                     } else if (v === false) {
-//                                                         return '#C00'
-//                                                     } else {
-//                                                         return ''
-//                                                     }
-//                                                 }
-//                                             }
-//
-//                                         }))
-//                                         break;
-//
-//                                     case 'date':
-//                                         cells.push(new sap.m.Text({
-//                                             text: {
-//                                                 path: column.template,
-//                                                 formatter: function (d) {
-//                                                     return d ? oDateFormat.format(new Date(d)) : null;
-//                                                 },
-//                                                 wrapping: false
-//                                             }
-//                                         }))
-//                                         break;
-//
-//                                     default:
-//                                         cells.push(new sap.m.Text({
-//                                             text: "{" + column.template + "}",
-//                                             wrapping: false
-//                                         }))
-//                                 }
-//
-//                             });
-//                             //  Inserisco gli status in maniera random
-//                             const statuses = ['Success', 'Warning', 'Error', 'Information']
-//                             dati.rows.forEach(d => {
-//                                 d.status = statuses[Math.floor(Math.random() * statuses.length)];
-//                             })
-//                             //  Tabella
-//                             t.bindItems('/rows', new sap.m.ColumnListItem({
-//                                 cells: cells,
-//                                 highlight: '{= ${status}}',
-//                                 //  Custom data per colorare righe
-//                                 // customData: {
-//                                 //     key: 'status',
-//                                 //     value: '{= ${status}}',
-//                                 //     writeToDom: true
-//                                 // }
-//                             }));
-//                             t.setModel(macchina_data);
-//                             // t.setAutoPopinMode(true)
-//                             t.setFixedLayout(false);
-//                             t.setAlternateRowColors(true);
-// */
-//                             //  Micorchart
-//                             var m = this.getView().byId('microchart');
-//                             m.setModel(macchina_data)
-//
-//                             // var ml = this.getView().byId('macchina-list');
-//                             // ml.setModel(macchina_data)
-//
-//                             // this.actions();
-//
-//                         }
-//                     )
-//             },
             /**
              * Inizializzazione e render del gauge
              */
@@ -358,7 +243,7 @@ sap.ui.define(
             },
 
             menuTTS: function () {
-                if (!this.oFixedSizeDialog) {
+                if (!this.TTS_dialog) {
                     const button_template = (type) => {
 
                         return new Button({
@@ -410,7 +295,7 @@ sap.ui.define(
                         items: flex
                     });
 
-                    this.oFixedSizeDialog = new Dialog({
+                    this.TTS_dialog = new Dialog({
                         title: "Funzioni ordine attivo",
                         // contentWidth: "80%",
                         // contentHeight: "80%",
@@ -418,17 +303,116 @@ sap.ui.define(
                         endButton: new Button({
                             text: "Chiudi",
                             press: function () {
-                                this.oFixedSizeDialog.close();
+                                this.TTS_dialog.close();
                             }.bind(this)
                         })
                     });
 
                     //to get access to the controller's model
-                    this.getView().addDependent(this.oFixedSizeDialog);
+                    this.getView().addDependent(this.TTS_dialog);
                 }
 
-                this.oFixedSizeDialog.open();
+                this.TTS_dialog.open();
             },
+
+            dialog_scelte: function () {
+
+                if (!this.scelte_dialog) {
+                    const today =  new Date().toISOString().substring(0,10);
+                    let tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1)
+                    tomorrow = tomorrow.toISOString().substring(0,10);
+
+                    // //  Data inizio
+                    const data_inizio = new FlexBox({
+                        justifyContent: 'SpaceBetween',
+                        alignItems: 'Center',
+                        items: [
+                            new sap.m.Label({
+                                text: 'Data inizio'
+                            }).addStyleClass('modal_label'),
+                            new sap.m.DatePicker({
+                                placeholder: 'Inserisci data inizio',
+                                value: today,
+                                valueFormat: "yyyy-MM-dd",
+                                displayFormat: 'long'
+                            }).addStyleClass('modal_text')
+                        ]
+                    })
+                    //  Data fine
+                    const data_fine = new FlexBox({
+                        justifyContent: 'SpaceBetween',
+                        alignItems: 'Center',
+                        fitContainer: true,
+                        items: [
+                            new sap.m.Label({
+                                text: 'Data fine'
+                            }).addStyleClass('modal_label'),
+                            new sap.m.DatePicker({
+                                placeholder: 'Inserisci data fine',
+                                value: tomorrow,
+                                valueFormat: "yyyy-MM-dd",
+                                displayFormat: 'long'
+                            }).addStyleClass('modal_text')
+                        ]
+                    })
+                    //  Centro di lavoro
+                    const cdl = new FlexBox({
+                        justifyContent: 'SpaceBetween',
+                        alignItems: 'Center',
+                        fitContainer: true,
+                        items: [
+                            new sap.m.Label({
+                                text: 'Centro di lavoro'
+                            }).addStyleClass('modal_label'),
+                            new sap.m.Input({
+                                placeholder: 'Inserisci centro di costo'
+                            }).addStyleClass('modal_text')
+                        ]
+                    })
+                    //  Solo ordini aperti?
+                    const ordini_aperti = new FlexBox({
+                        justifyContent: 'SpaceBetween',
+                        alignItems: 'Center',
+                        fitContainer: true,
+                        items: [
+                            new sap.m.Label({
+                                text: 'Solo ordini aperto'
+                            }).addStyleClass('modal_label'),
+                            new sap.m.CheckBox({
+                                placeholder: 'Inserisci data fine'
+                            }).addStyleClass('modal_text')
+                        ]
+                    })
+
+                    const grid = new FlexBox({
+                        direction: 'Column',
+                        items: [
+                            data_inizio,
+                            data_fine,
+                            cdl,
+                            ordini_aperti
+                        ]
+                    }).addStyleClass('modal_scelte');
+
+                    this.scelte_dialog = new Dialog({
+                        title: "Scelte",
+                        // contentWidth: "80%",
+                        // contentHeight: "80%",
+                        content: grid,
+                        endButton: new Button({
+                            text: "Chiudi",
+                            press: function () {
+                                this.scelte_dialog.close();
+                            }.bind(this)
+                        })
+                    });
+
+                    //to get access to the controller's model
+                    this.getView().addDependent(this.scelte_dialog);
+                }
+                this.scelte_dialog.open();
+            }
         });
     }
 );

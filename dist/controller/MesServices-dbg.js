@@ -22,9 +22,10 @@ sap.ui.define(
 
             const service = services_data.services[service_name];
             const conf = services_data.conf[service.conf || 'base'];
+            const proxy = 'http://localhost:8090/';
 
             const o = {
-                path: `${conf.protocol}://${conf.server}${conf.port ? ':' + conf.port : ''}${service.path}`,
+                path: `${proxy}${conf.protocol}://${conf.server}${conf.port ? ':' + conf.port : ''}${service.path}`,
                 method: service.method || 'GET'
             }
 
@@ -47,28 +48,25 @@ sap.ui.define(
         //  Crea il template delle colonne in base al tipo di colonna definito da SQLDataType
         function get(service_name) {
             return new Promise((resolve, reject) => {
-                (function resolve_service() {
 
+                (function resolve_service() {
                     if (init) {
                         let o;
-                        // if (document.location.hostname === 'localhost') {
-                        //     o = get_service(service_name);
-                        // } else {
-                        o = get_file(service_name);
-                        // }
+                        if (document.location.hostname === 'localhost') {
+                            o = get_service(service_name);
+                        } else {
+                            o = get_file(service_name);
+                        }
 
                         const request = new XMLHttpRequest();
                         request.open(o.method, o.path, false);
                         request.send(null);
                         const data = JSON.parse(request.responseText);
 
-
-                        // return new Promise((resolve, reject) => {
-                        resolve(data)
-                        // });
+                        return resolve(data)
                     }
 
-                    setTimeout(resolve_service, 1000)
+                    t = setTimeout(resolve_service, 1000)
 
                 })()
 
