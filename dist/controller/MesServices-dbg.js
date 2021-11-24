@@ -40,7 +40,7 @@ sap.ui.define(
 
         function get_file(service_name) {
             return {
-                path: `/resources/mocks/${service_name}.json`,
+                path: `/resources/static/${service_name}.json`,
                 method: 'GET'
             };
         }

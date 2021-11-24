@@ -20,18 +20,32 @@ sap.ui.define(
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
             estrusione: function (oEvent) {
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("estrusione");
+                if (document.location.hash === '#/estrusione') {
+                    oRouter.navTo("stampa");
+                } else {
+                    oRouter.navTo("estrusione");
+                }
             },
             onInit: function () {
+
+                let tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1)
+                tomorrow = tomorrow.toISOString().substring(0, 10);
+
+                this.pars = {
+                    data_inizio: new Date().toISOString().substring(0, 10),
+                    data_fine: tomorrow,
+                    cdl: ''
+                }
                 let hash = document.location.hash.split('/').pop();
                 hash = hash || 'stampa';
+
                 MesServices('cdl')
                     .then(
                         (cdl_data) => {
                             const cdl = new sap.ui.model.json.JSONModel();
                             cdl.setData(cdl_data);
                             this.getView().setModel(cdl, "cdl");
-                            console.log(`%cBaseController `, `border:1px solid black;color:black;padding:2px 4px;`, `cdl_data`, cdl_data);
                         }
                     )
                 MesServices('orders')
@@ -39,16 +53,42 @@ sap.ui.define(
                         (orders_data) => this.ordini(orders_data)
                     );
 
-                MesServices('stampa')
+                MesServices(hash)
                     .then(
                         (cdl_data) => this.cdl(cdl_data)
                     )
 
             },
             onAfterRendering: function () {
-
+                this.afterRendering = true;
                 this.gauge_init();
+                this.infos();
 
+            },
+            infos: function() {
+                if (this.getModel('scheda')) {
+                    const page = document.querySelector('#' + this.getView().sId);
+                    if (!page) {
+                        return
+                    }
+
+                    const cdl_data = this.getModel('scheda');
+
+                    //  Info
+                    cdl_data.getProperty('/stazione/info').forEach(i => {
+                        page.querySelector('#stazione__info').append(this.info(i, {size: 'L'}))
+                    })
+
+                    //  Data
+                    cdl_data.getProperty('/stazione/data').forEach(i => {
+                        page.querySelector('#stazione__data').append(this.info(i))
+                    })
+
+                    //   Info
+                    cdl_data.getProperty('/macchina/info').forEach(i => {
+                        page.querySelector('#graph__info').append(this.info(i))
+                    })
+                }
             },
             ordini: function (orders_data) {
 
@@ -77,30 +117,80 @@ sap.ui.define(
                 t.bindItems('/Rowsets/Rowset/0/Row', new sap.m.ColumnListItem({
                     cells: tab_columns
                 }));
-
+                // valueFormat: "yyyy-MM-dd",
+                //     displayFormat: 'long'
+                const oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "dd-MM-yyyy"});
+                t.setHeaderText('Ordini' + ' dal ' + oDateFormat.format(new Date(this.pars.data_inizio)) + ' al ' + oDateFormat.format(new Date(this.pars.data_fine)));
                 t.setFixedLayout(false);
                 t.setAlternateRowColors(true);
 
             },
             cdl: function (cdl_data) {
 
-                const cdl = new sap.ui.model.json.JSONModel();
-                cdl.setData(cdl_data);
-                this.getView().setModel(cdl, "scheda");
+                const cdl = new sap.ui.model.json.JSONModel(cdl_data);
+                this.setModel(cdl, 'scheda');
 
-                const i18n = this.getView().getModel('i18n');
-                document.title = i18n.getResourceBundle().getText('title') + ' > ' + cdl_data.nome
+                const i18n = this.getModel('i18n');
+                document.title = cdl_data.nome
 
                 //  Microchart
                 var m = this.getView().byId('microchart');
                 m.setModel(cdl)
+
+                if (this.afterRendering) {
+                    this.infos();
+                }
+            },
+            info: function(info, options) {
+
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('value');
+                if(options) {
+                    if (options.size) {
+                        wrapper.classList.add('value--' + options.size)
+                    }
+                }
+
+                const label = document.createElement('div');
+                label.classList.add('value__label');
+                label.innerHTML = info.key;
+
+                const value = document.createElement('div');
+                value.classList.add('value__value');
+
+                if(typeof info.value === 'boolean') {
+                    const icon = document.createElement('span');
+                    icon.classList.add('sapUiIcon');
+                    icon.classList.add('status--icon__icon');
+                    icon.style.fontFamily = 'SAP-icons';
+
+                    if (info.value === true) {
+                        icon.setAttribute('data-sap-ui-icon-content', '');
+                        value.classList.add('value--success');
+                    } else {
+                        icon.setAttribute('data-sap-ui-icon-content', '');
+                        value.classList.add('value--error');
+                    }
+                    value.append(icon);
+
+                    const text = document.createElement('span');
+                    text.innerHTML = '&nbsp;' + this.getResourceBundle().getText(info.value === true ? 'yes' : 'no');
+
+                    value.append(text);
+                } else {
+                    value.innerHTML = info.value;
+                }
+
+                wrapper.append(label);
+                wrapper.append(value);
+                return wrapper;
             },
             /**
              * Inizializzazione e render del gauge
              */
             gauge_init: function () {
                 const view_id = this.getView().sId;
-                const canvas = document.querySelector('canvas')
+                const canvas = document.querySelector('#' + view_id).querySelector('canvas')
                 canvas.setAttribute('id', view_id + '-canvas')
 
                 var gauge_min = 0;
@@ -330,10 +420,6 @@ sap.ui.define(
             dialog_scelte: function () {
 
                 if (!this.scelte_dialog) {
-                    const today = new Date().toISOString().substring(0, 10);
-                    let tomorrow = new Date();
-                    tomorrow.setDate(tomorrow.getDate() + 1)
-                    tomorrow = tomorrow.toISOString().substring(0, 10);
 
                     // //  Data inizio
                     const data_inizio = new FlexBox({
@@ -346,7 +432,7 @@ sap.ui.define(
                             new sap.m.DatePicker({
                                 id: 'scelte_data_inizio',
                                 placeholder: 'Inserisci data inizio',
-                                value: today,
+                                value: this.pars.data_inizio,
                                 valueFormat: "yyyy-MM-dd",
                                 displayFormat: 'long'
                             }).addStyleClass('modal_text')
@@ -364,7 +450,7 @@ sap.ui.define(
                             new sap.m.DatePicker({
                                 id: 'scelte_data_fine',
                                 placeholder: 'Inserisci data fine',
-                                value: tomorrow,
+                                value: this.pars.data_fine,
                                 valueFormat: "yyyy-MM-dd",
                                 displayFormat: 'long'
                             }).addStyleClass('modal_text')
@@ -381,7 +467,6 @@ sap.ui.define(
                             }).addStyleClass('modal_label'),
                             new sap.m.ComboBox({
                                 id: 'scelte_cdl',
-                                placeholder: 'Inserisci centro di lavoro',
                                 items: {
                                     path: 'cdl>/cdl',
                                     template: new sap.ui.core.Item({

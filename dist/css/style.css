@@ -238,3 +238,8 @@ tr[data-status='Error'] {
     padding:0 1em;
     /*min-width: 550px;*/
 }
+
+.sapMTitleStyleAuto {
+    font-size: 1.5em;
+    font-weight: bold;
+}

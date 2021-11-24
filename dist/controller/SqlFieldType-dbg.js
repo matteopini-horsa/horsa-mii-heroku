@@ -4,9 +4,9 @@ sap.ui.define(
         'sap/ui/core/format/NumberFormat'
     ],
     function (date_format, number_format) {
-        var oDateFormat = date_format.getInstance({pattern: "MM/dd/yyyy"});
-        var oIntegerFormat = number_format.getIntegerInstance();
-        var oFloatFormat = number_format.getFloatInstance({
+        const oDateFormat = date_format.getInstance({pattern: "MM/dd/yyyy"});
+        const oIntegerFormat = number_format.getIntegerInstance();
+        const oFloatFormat = number_format.getFloatInstance({
             maxFractionDigits: 2,
             minFractionDigits: 2
         });

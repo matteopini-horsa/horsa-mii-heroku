@@ -77,20 +77,24 @@
       },
       "routes": [
         {
-          "name": "RouteMainView",
-          "pattern": "RouteMainView",
-          "target": ["TargetMainView"]
-        }, {
           "name": "estrusione",
           "pattern": "estrusione",
-          "target": ["TargetMainView2"]
+          "target": [
+            "TargetMainView2"
+          ]
+        },      {
+          "name": "stampa",
+          "pattern": "stampa",
+          "target": [
+            "TargetMainView"
+          ]
         }
       ],
       "targets": {
         "TargetMainView": {
-          "viewType": "XML",
+          "viewType": "HTML",
           "viewLevel": 1,
-          "viewId": "idAppControl",
+          "viewId": "idAppControl3",
           "viewName": "MainView"
         },
         "TargetMainView2": {
