@@ -22,12 +22,21 @@ sap.ui.define(
                 var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
                 oRouter.navTo("estrusione");
             },
-            onAfterRendering: function () {
-
+            onInit: function () {
+                let hash = document.location.hash.split('/').pop();
+                hash = hash || 'stampa';
+                MesServices('cdl')
+                    .then(
+                        (cdl_data) => {
+                            const cdl = new sap.ui.model.json.JSONModel();
+                            cdl.setData(cdl_data);
+                            this.getView().setModel(cdl, "cdl");
+                            console.log(`%cBaseController `, `border:1px solid black;color:black;padding:2px 4px;`, `cdl_data`, cdl_data);
+                        }
+                    )
                 MesServices('orders')
                     .then(
-                        (orders_data) => this.ordini(orders_data),
-                        (err) => console.log(`%cBaseController `, `border:1px solid gold;color:gold;padding:2px 4px;`, `err`, err)
+                        (orders_data) => this.ordini(orders_data)
                     );
 
                 MesServices('stampa')
@@ -35,9 +44,9 @@ sap.ui.define(
                         (cdl_data) => this.cdl(cdl_data)
                     )
 
+            },
+            onAfterRendering: function () {
 
-                let hash = document.location.hash.split('/').pop();
-                hash = hash || 'stampa';
                 this.gauge_init();
 
             },
@@ -82,7 +91,7 @@ sap.ui.define(
                 const i18n = this.getView().getModel('i18n');
                 document.title = i18n.getResourceBundle().getText('title') + ' > ' + cdl_data.nome
 
-                //  Micorchart
+                //  Microchart
                 var m = this.getView().byId('microchart');
                 m.setModel(cdl)
             },
@@ -90,6 +99,10 @@ sap.ui.define(
              * Inizializzazione e render del gauge
              */
             gauge_init: function () {
+                const view_id = this.getView().sId;
+                const canvas = document.querySelector('canvas')
+                canvas.setAttribute('id', view_id + '-canvas')
+
                 var gauge_min = 0;
                 var gauge_max = 380
 
@@ -101,7 +114,7 @@ sap.ui.define(
                 }
 
                 var gauge = new RadialGauge({
-                    renderTo: 'canvas-id',
+                    renderTo: view_id + '-canvas',
                     width: 222,
                     height: 222,
                     units: "",
@@ -160,23 +173,23 @@ sap.ui.define(
             },
 
             gauge_update: function (gauge, intervals) {
+                const sid = this.getView().sId;
+                const page = document.querySelector('#' + sid);
                 gauge.value = this.random_number(20, 180)
-                var status = document.querySelector('.status-tile');
+                var status = page.querySelector('.status-tile');
                 status.classList.remove('status-tile--error');
                 status.classList.remove('status-tile--success');
                 var is_error = gauge.value >= intervals.error_min && gauge.value <= intervals.error_max;
                 status.classList.add(is_error ? 'status-tile--error' : 'status-tile--success');
                 var icon_path = 'sap-icon://message-success';
                 if (is_error) {
-                    document.querySelector('.status-tile__label--error').style.display = 'block';
-                    document.querySelector('.status-tile__label--success').style.display = 'none';
+                    page.querySelector('.status-tile__label--error').style.display = 'block';
+                    page.querySelector('.status-tile__label--success').style.display = 'none';
                     icon_path = 'sap-icon://message-warning'
                 } else {
-                    document.querySelector('.status-tile__label--error').style.display = 'none';
-                    document.querySelector('.status-tile__label--success').style.display = 'block';
+                    page.querySelector('.status-tile__label--error').style.display = 'none';
+                    page.querySelector('.status-tile__label--success').style.display = 'block';
                 }
-
-                // this.getView().byId('status--icon__icon').setSrc(icon_path);
 
             },
 
@@ -308,7 +321,6 @@ sap.ui.define(
                         })
                     });
 
-                    //to get access to the controller's model
                     this.getView().addDependent(this.TTS_dialog);
                 }
 
@@ -318,10 +330,10 @@ sap.ui.define(
             dialog_scelte: function () {
 
                 if (!this.scelte_dialog) {
-                    const today =  new Date().toISOString().substring(0,10);
+                    const today = new Date().toISOString().substring(0, 10);
                     let tomorrow = new Date();
                     tomorrow.setDate(tomorrow.getDate() + 1)
-                    tomorrow = tomorrow.toISOString().substring(0,10);
+                    tomorrow = tomorrow.toISOString().substring(0, 10);
 
                     // //  Data inizio
                     const data_inizio = new FlexBox({
@@ -332,6 +344,7 @@ sap.ui.define(
                                 text: 'Data inizio'
                             }).addStyleClass('modal_label'),
                             new sap.m.DatePicker({
+                                id: 'scelte_data_inizio',
                                 placeholder: 'Inserisci data inizio',
                                 value: today,
                                 valueFormat: "yyyy-MM-dd",
@@ -349,6 +362,7 @@ sap.ui.define(
                                 text: 'Data fine'
                             }).addStyleClass('modal_label'),
                             new sap.m.DatePicker({
+                                id: 'scelte_data_fine',
                                 placeholder: 'Inserisci data fine',
                                 value: tomorrow,
                                 valueFormat: "yyyy-MM-dd",
@@ -365,8 +379,16 @@ sap.ui.define(
                             new sap.m.Label({
                                 text: 'Centro di lavoro'
                             }).addStyleClass('modal_label'),
-                            new sap.m.Input({
-                                placeholder: 'Inserisci centro di costo'
+                            new sap.m.ComboBox({
+                                id: 'scelte_cdl',
+                                placeholder: 'Inserisci centro di lavoro',
+                                items: {
+                                    path: 'cdl>/cdl',
+                                    template: new sap.ui.core.Item({
+                                        key: "{cdl>key}",
+                                        text: "{cdl>text}",
+                                    })
+                                }
                             }).addStyleClass('modal_text')
                         ]
                     })
@@ -380,6 +402,7 @@ sap.ui.define(
                                 text: 'Solo ordini aperto'
                             }).addStyleClass('modal_label'),
                             new sap.m.CheckBox({
+                                id: 'scelte_ordini_aperti',
                                 placeholder: 'Inserisci data fine'
                             }).addStyleClass('modal_text')
                         ]
@@ -397,9 +420,14 @@ sap.ui.define(
 
                     this.scelte_dialog = new Dialog({
                         title: "Scelte",
-                        // contentWidth: "80%",
-                        // contentHeight: "80%",
                         content: grid,
+                        beginButton: new Button({
+                            type: sap.m.ButtonType.Emphasized,
+                            text: "OK",
+                            press: function () {
+                                this.scelte_dialog.close();
+                            }.bind(this)
+                        }),
                         endButton: new Button({
                             text: "Chiudi",
                             press: function () {
