@@ -52,6 +52,9 @@
         "settings": {
           "bundleName": "it.horsa.gualapack.macchina.i18n.i18n"
         }
+      },
+      "prova": {
+        "type": "sap.ui.model.json.JSONModel"
       }
     },
     "resources": {

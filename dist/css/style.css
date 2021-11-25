@@ -76,11 +76,15 @@
 }
 
 .info--col-wide {
-    display: grid;
-    grid-gap: 5%;
-    grid-template-rows: repeat(3, 30%);
+    /*display: grid;*/
+    /*grid-gap: 5%;*/
+    /*grid-template-rows: repeat(3, 30%);*/
     /*color: #FFF;*/
     /*margin: -1em 0 -1em -1em;*/
+}
+
+.info--col-wide > div, .info--col-narrow > div, .graph-tile--col-narrow > div {
+    height: 100%;
 }
 
 .graph-tile--col-wide, .info--col-wide {

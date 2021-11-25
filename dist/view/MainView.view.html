@@ -20,7 +20,6 @@
                      data-text="Funzioni Ordine Attivo">
                 </div>
             </div>
-<!--            <a href="/estrusione">test</a>-->
             <div data-sap-ui-aggregation="content">
                 <div class="page-wrapper">
                     <div class="page-content">
@@ -28,14 +27,28 @@
                             <!-- Info -->
                             <div class="main-bar__item">
                                 <div class="flex">
-                                    <div id="stazione__info" class="info--col-wide"></div>
-                                    <div id="stazione__data" class="info--col-narrow flex--v"></div>
+<!--                                    <div id="stazione__info" class="info&#45;&#45;col-wide"></div>-->
+                                    <div class="info--col-wide">
+                                        <div data-sap-ui-type="sap.m.FlexBox"
+                                             data-direction="Column"
+                                             data-justify-content="SpaceBetween"
+                                             data-fit-container="true"
+                                             id="stazione__info"
+                                        ></div>
+                                    </div>
+<!--                                    <div id="stazione__data" class="info&#45;&#45;col-narrow flex&#45;&#45;v"></div>-->
+                                    <div class="info--col-narrow">
+                                        <div data-sap-ui-type="sap.m.FlexBox"
+                                             data-direction="Column"
+                                             data-justify-content="SpaceBetween"
+                                             data-fit-container="true"
+                                             id="stazione__data"></div>
+                                    </div>
                                 </div>
                             </div>
                             <!-- Stato -->
                             <div id="status-tile" class="main-bar__item status-tile flex">
                                 <div class="status-tile__wrapper flex">
-
                                     <div class="status-tile__gauge">
                                         <div class="canvas-container">
                                             <canvas></canvas>
@@ -75,7 +88,13 @@
                                     </div>
                                 </div>
 
-                                <div id="graph__info" class="graph-tile--col-narrow flex--v"></div>
+                                <div class="graph-tile--col-narrow">
+                                    <div data-sap-ui-type="sap.m.FlexBox"
+                                         data-direction="Column"
+                                         data-justify-content="SpaceBetween"
+                                         data-fit-container="true"
+                                         id="graph__info"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="table-wrapper">

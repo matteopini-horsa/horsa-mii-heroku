@@ -12,14 +12,16 @@ sap.ui.define(
         "sap/ui/layout/Grid",
         "sap/m/FlexBox",
         "./SqlFieldType",
-        "./MesServices"
+        "./MesServices",
+        "it/horsa/gualapack/macchina/control/Info"
     ],
-    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid, FlexBox, SqlFieldType, MesServices) {
+    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid, FlexBox, SqlFieldType, MesServices, Info) {
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
             onInit: function () {
-
+                const prova = this.getOwnerComponent().getModel("prova")
+                console.log(`%cBaseController onInit`, `border:1px solid black;color:black;padding:2px 4px;`, `prova`, prova);
                 let tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1)
                 tomorrow = tomorrow.toISOString().substring(0, 10);
@@ -70,18 +72,34 @@ sap.ui.define(
                     const cdl_data = this.getModel('scheda');
 
                     //  Info
-                    cdl_data.getProperty('/stazione/info').forEach(i => {
-                        page.querySelector('#stazione__info').append(this.info(i, {size: 'L'}))
+                    cdl_data.getProperty('/stazione/info').forEach((info, idx) => {
+                        // page.querySelector('#stazione__info').append(this.info(i, {size: 'L'}))
+                        this.getView().byId('stazione__info').insertItem(new Info({
+                            label: info.key,
+                            text: info.value,
+                            type: typeof info.value,
+                            size: 'L'
+                        }), idx)
                     })
 
                     //  Data
-                    cdl_data.getProperty('/stazione/data').forEach(i => {
-                        page.querySelector('#stazione__data').append(this.info(i))
+                    cdl_data.getProperty('/stazione/data').forEach((info, idx) => {
+                        // page.querySelector('#stazione__data').append(this.info(i))
+                        this.getView().byId('stazione__data').insertItem(new Info({
+                            label: info.key,
+                            text: info.value,
+                            type: typeof info.value
+                        }), idx)
                     })
 
                     //   Info
-                    cdl_data.getProperty('/macchina/info').forEach(i => {
-                        page.querySelector('#graph__info').append(this.info(i))
+                    cdl_data.getProperty('/macchina/info').forEach((info, idx) => {
+                        // page.querySelector('#graph__info').append(this.info(i))
+                        this.getView().byId('graph__info').insertItem(new Info({
+                            label: info.key,
+                            text: info.value,
+                            type: typeof info.value
+                        }), idx)
                     })
                 }
             },

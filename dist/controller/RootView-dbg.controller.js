@@ -15,6 +15,10 @@ sap.ui.define([
                         cdl.setData(cdl_data);
                         this.getView().setModel(cdl, "cdl");
 
+                        const prova = this.getOwnerComponent().getModel("prova")
+                        console.log(`%cRootView `, `border:1px solid black;color:black;padding:2px 4px;`, `prova`, prova);
+                        prova.setData(cdl_data);
+
                         const pulsantiera = this.getView().byId('pulsantiera');
                         pulsantiera.items = []
 
