@@ -31,7 +31,7 @@ sap.ui.define([
                         };
 
                         const grid = new sap.ui.layout.Grid({
-                            defaultSpan: 'XL6 L6 M12 S12',
+                            defaultSpan: 'XL12 L12 M12 S12',
                             content: {
                                 path: 'cdl>/cdl',
                                 template: button_template()
