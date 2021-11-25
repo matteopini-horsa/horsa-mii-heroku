@@ -58,7 +58,6 @@ sap.ui.define(
             },
             onAfterRendering: function () {
                 this.afterRendering = true;
-                this.gauge_init();
                 this.infos();
 
             },
@@ -154,146 +153,14 @@ sap.ui.define(
                     this.infos();
                 }
             },
-            info: function (info, options) {
-
-                const wrapper = document.createElement('div');
-                wrapper.classList.add('value');
-                if (options) {
-                    if (options.size) {
-                        wrapper.classList.add('value--' + options.size)
-                    }
-                }
-
-                const label = document.createElement('div');
-                label.classList.add('value__label');
-                label.innerHTML = info.key;
-
-                const value = document.createElement('div');
-                value.classList.add('value__value');
-
-                if (typeof info.value === 'boolean') {
-                    const icon = document.createElement('span');
-                    icon.classList.add('sapUiIcon');
-                    icon.classList.add('status--icon__icon');
-                    icon.style.fontFamily = 'SAP-icons';
-
-                    if (info.value === true) {
-                        icon.setAttribute('data-sap-ui-icon-content', '');
-                        value.classList.add('value--success');
-                    } else {
-                        icon.setAttribute('data-sap-ui-icon-content', '');
-                        value.classList.add('value--error');
-                    }
-                    value.append(icon);
-
-                    const text = document.createElement('span');
-                    text.innerHTML = '&nbsp;' + this.getResourceBundle().getText(info.value === true ? 'yes' : 'no');
-
-                    value.append(text);
-                } else {
-                    value.innerHTML = info.value;
-                }
-
-                wrapper.append(label);
-                wrapper.append(value);
-                return wrapper;
-            },
             /**
-             * Inizializzazione e render del gauge
+             * Aggiornamento gauge
              */
-            gauge_init: function () {
-                const view_id = this.getView().sId;
-                const canvas = document.querySelector('#' + view_id).querySelector('canvas')
-                canvas.setAttribute('id', view_id + '-canvas')
-
-                var gauge_min = 0;
-                var gauge_max = 380
-
-                var intervals = {
-                    min: 0,
-                    max: 380,
-                    error_min: 0,
-                    error_max: 90
-                }
-
-                var gauge = new RadialGauge({
-                    renderTo: view_id + '-canvas',
-                    width: 222,
-                    height: 222,
-                    units: "",
-                    minValue: intervals.min,
-                    startAngle: 180,
-                    ticksAngle: 180,
-                    valueBox: false,
-                    maxValue: intervals.max,
-                    value: 0,
-                    majorTicks: [
-                        "0",
-                        "76",
-                        "152",
-                        "228",
-                        "304",
-                        "380"
-                    ],
-                    minorTicks: 2,
-                    strokeTicks: true,
-                    highlights: [
-                        {
-                            from: intervals.error_min,
-                            to: intervals.error_max,
-                            color: "#C00"
-                        },
-                        {
-                            "from": 90,
-                            "to": 152,
-                            "color": "rgba(255, 255, 0, .75)"
-                        },
-                        {
-                            "from": 152,
-                            "to": 380,
-                            "color": "#3fa45b"
-                        }
-                    ],
-                    colorPlate: "rgba(240, 240, 240, 1)",
-                    // colorPlate: "transparent",
-                    borderShadowWidth: 0,
-                    borders: false,
-                    needleType: "arrow",
-                    needleStart: 1,
-                    needleWidth: 3,
-                    needleCircleSize: 7,
-                    needleCircleOuter: true,
-                    needleCircleInner: false,
-                    animationDuration: 1000,
-                    animationRule: "dequad" //"linear"
-                }).draw();
-
-                this.gauge_update(gauge, intervals)
-
-                setInterval(() => {
-                    this.gauge_update(gauge, intervals)
-                }, 10000);
-            },
-
-            gauge_update: function (gauge, intervals) {
-                const sid = this.getView().sId;
-                const page = document.querySelector('#' + sid);
-                gauge.value = this.random_number(20, 180)
-                var status = page.querySelector('.status-tile');
-                status.classList.remove('status-tile--error');
-                status.classList.remove('status-tile--success');
-                var is_error = gauge.value >= intervals.error_min && gauge.value <= intervals.error_max;
-                status.classList.add(is_error ? 'status-tile--error' : 'status-tile--success');
-                var icon_path = 'sap-icon://message-success';
-                if (is_error) {
-                    page.querySelector('.status-tile__label--error').style.display = 'block';
-                    page.querySelector('.status-tile__label--success').style.display = 'none';
-                    icon_path = 'sap-icon://message-warning'
-                } else {
-                    page.querySelector('.status-tile__label--error').style.display = 'none';
-                    page.querySelector('.status-tile__label--success').style.display = 'block';
-                }
-
+            gauge_change: function (e) {
+                const value = this.random_number(20, 180);
+                e.oSource.value = value;
+                e.oSource.text = value > 90 ? 'In funzione' : 'Fermo Rispetto Qualità'
+                e.oSource.time = this.random_number(1, 10) + ' min.'
             },
 
             random_number: function (min, max) {

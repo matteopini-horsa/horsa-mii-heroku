@@ -48,29 +48,7 @@
                             </div>
                             <!-- Stato -->
                             <div id="status-tile" class="main-bar__item status-tile flex">
-                                <div class="status-tile__wrapper flex">
-                                    <div class="status-tile__gauge">
-                                        <div class="canvas-container">
-                                            <canvas></canvas>
-                                        </div>
-                                    </div>
-
-                                    <div class="status-tile__status">
-                                        <div class="flex--v" style="height:100%">
-
-                                            <div class="status-tile__label">
-                                                <span class="status-tile__label--error">Fermo Rispetto Qualità</span>
-                                                <span class="status-tile__label--success"
-                                                      style="display:none">In funzione</span>
-                                            </div>
-
-                                            <div class="status-tile__icon">&nbsp;8 min.</div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
+                                <div data-sap-ui-type="it.horsa.gualapack.macchina.control.Gauge" data-change=".gauge_change"></div>
                             </div>
                             <!-- Grafici -->
                             <div class="main-bar__item graph-tile">

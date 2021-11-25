@@ -103,6 +103,11 @@
     transition: background-color 1000ms linear;
 }
 
+.status-tile > div {
+    height: 100%;
+    width: 100%;
+}
+
 .status-tile--error {
     background-color: #C00;
 }
