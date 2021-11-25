@@ -29,7 +29,7 @@
   "sap.ui5": {
     "flexEnabled": true,
     "rootView": {
-      "viewName": "it.horsa.gualapack.macchina.view.MainView",
+      "viewName": "it.horsa.gualapack.macchina.view.RootView",
       "type": "HTML",
       "async": true,
       "id": "idAppControl"
@@ -73,9 +73,17 @@
         "viewPath": "it.horsa.gualapack.macchina.view",
         "controlId": "idAppControl",
         "controlAggregation": "pages",
-        "async": true
+        "async": true,
+        "bypassed": {
+          "target": "notFound"
+        }
       },
       "routes": [
+        {
+          "name": "home",
+          "pattern": "",
+          "target": "Home"
+        },
         {
           "name": "estrusione",
           "pattern": "estrusione",
@@ -91,6 +99,10 @@
         }
       ],
       "targets": {
+        "Home": {
+          "viewName": "RootView",
+          "viewType": "HTML"
+        },
         "TargetMainView": {
           "viewType": "HTML",
           "viewLevel": 1,
@@ -102,6 +114,11 @@
           "viewLevel": 1,
           "viewId": "idAppControl2",
           "viewName": "MainView"
+        },
+        "notFound": {
+          "viewName": "NotFound",
+          "viewType": "HTML",
+          "transition": "show"
         }
       }
     }

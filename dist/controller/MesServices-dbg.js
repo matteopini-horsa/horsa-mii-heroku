@@ -52,11 +52,11 @@ sap.ui.define(
                 (function resolve_service() {
                     if (init) {
                         let o;
-                        if (document.location.hostname === 'localhost') {
-                            o = get_service(service_name);
-                        } else {
+                        // if (document.location.hostname === 'localhost') {
+                        //     o = get_service(service_name);
+                        // } else {
                             o = get_file(service_name);
-                        }
+                        // }
 
                         const request = new XMLHttpRequest();
                         request.open(o.method, o.path, false);

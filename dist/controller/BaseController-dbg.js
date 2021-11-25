@@ -18,27 +18,21 @@ sap.ui.define(
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
-            estrusione: function (oEvent) {
-                var oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                if (document.location.hash === '#/estrusione') {
-                    oRouter.navTo("stampa");
-                } else {
-                    oRouter.navTo("estrusione");
-                }
-            },
             onInit: function () {
 
                 let tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1)
                 tomorrow = tomorrow.toISOString().substring(0, 10);
 
+                let hash = document.location.hash.split('/').pop();
+                hash = hash || 'stampa';
+
                 this.pars = {
                     data_inizio: new Date().toISOString().substring(0, 10),
                     data_fine: tomorrow,
-                    cdl: ''
+                    cdl: hash
                 }
-                let hash = document.location.hash.split('/').pop();
-                hash = hash || 'stampa';
+
 
                 MesServices('cdl')
                     .then(
@@ -46,6 +40,7 @@ sap.ui.define(
                             const cdl = new sap.ui.model.json.JSONModel();
                             cdl.setData(cdl_data);
                             this.getView().setModel(cdl, "cdl");
+                            this.pars.cdl = cdl_data.cdl.find(c => c.key === hash)
                         }
                     )
                 MesServices('orders')
@@ -65,7 +60,7 @@ sap.ui.define(
                 this.infos();
 
             },
-            infos: function() {
+            infos: function () {
                 if (this.getModel('scheda')) {
                     const page = document.querySelector('#' + this.getView().sId);
                     if (!page) {
@@ -141,11 +136,11 @@ sap.ui.define(
                     this.infos();
                 }
             },
-            info: function(info, options) {
+            info: function (info, options) {
 
                 const wrapper = document.createElement('div');
                 wrapper.classList.add('value');
-                if(options) {
+                if (options) {
                     if (options.size) {
                         wrapper.classList.add('value--' + options.size)
                     }
@@ -158,7 +153,7 @@ sap.ui.define(
                 const value = document.createElement('div');
                 value.classList.add('value__value');
 
-                if(typeof info.value === 'boolean') {
+                if (typeof info.value === 'boolean') {
                     const icon = document.createElement('span');
                     icon.classList.add('sapUiIcon');
                     icon.classList.add('status--icon__icon');
@@ -345,7 +340,7 @@ sap.ui.define(
                 }
             },
 
-            menuTTS: function () {
+            menu_TTS: function () {
                 if (!this.TTS_dialog) {
                     const button_template = (type) => {
 
@@ -361,8 +356,7 @@ sap.ui.define(
                             new sap.m.Title({
                                 text: 'Ordini',
                                 level: 'H1'
-                            })
-                                .addStyleClass('grid_title'),
+                            }).addStyleClass('grid_title'),
                             new Grid({
                                 defaultSpan: 'XL6 L6 M12 S12',
                                 content: {
@@ -378,8 +372,7 @@ sap.ui.define(
                             new sap.m.Title({
                                 text: 'Funzioni',
                                 level: 'H1'
-                            })
-                                .addStyleClass('grid_title'),
+                            }).addStyleClass('grid_title'),
                             new Grid({
                                 defaultSpan: 'XL4 L4 M6 S12',
                                 content: {
@@ -399,7 +392,7 @@ sap.ui.define(
                     });
 
                     this.TTS_dialog = new Dialog({
-                        title: "Funzioni ordine attivo",
+                        title: "Menu TTS",
                         // contentWidth: "80%",
                         // contentHeight: "80%",
                         content: grid,
@@ -416,8 +409,38 @@ sap.ui.define(
 
                 this.TTS_dialog.open();
             },
+            menu_funzioniOrdineAttivo: function () {
+                if (!this.funzioniOrdineAttivo_dialog) {
+                    const button_template = (type) => {
+                        return new Button({
+                            text: '{scheda>text}',
+                            type: type || 'Default',
+                            width: '100%'
+                        })
+                    };
 
-            dialog_scelte: function () {
+                    this.funzioniOrdineAttivo_dialog = new Dialog({
+                        title: "Funzioni ordine attivo",
+                        content: new Grid({
+                            defaultSpan: 'XL4 L4 M6 S12',
+                            content: {
+                                path: 'scheda>/funzioni_ordine_attivo',
+                                template: button_template()
+                            }
+                        }),
+                        endButton: new Button({
+                            text: "Chiudi",
+                            press: function () {
+                                this.funzioniOrdineAttivo_dialog.close();
+                            }.bind(this)
+                        })
+                    });
+
+                    this.getView().addDependent(this.funzioniOrdineAttivo_dialog);
+                }
+                this.funzioniOrdineAttivo_dialog.open();
+            },
+            menu_scelte: function () {
 
                 if (!this.scelte_dialog) {
 
@@ -430,7 +453,6 @@ sap.ui.define(
                                 text: 'Data inizio'
                             }).addStyleClass('modal_label'),
                             new sap.m.DatePicker({
-                                id: 'scelte_data_inizio',
                                 placeholder: 'Inserisci data inizio',
                                 value: this.pars.data_inizio,
                                 valueFormat: "yyyy-MM-dd",
@@ -448,7 +470,6 @@ sap.ui.define(
                                 text: 'Data fine'
                             }).addStyleClass('modal_label'),
                             new sap.m.DatePicker({
-                                id: 'scelte_data_fine',
                                 placeholder: 'Inserisci data fine',
                                 value: this.pars.data_fine,
                                 valueFormat: "yyyy-MM-dd",
@@ -456,6 +477,7 @@ sap.ui.define(
                             }).addStyleClass('modal_text')
                         ]
                     })
+
                     //  Centro di lavoro
                     const cdl = new FlexBox({
                         justifyContent: 'SpaceBetween',
@@ -466,7 +488,12 @@ sap.ui.define(
                                 text: 'Centro di lavoro'
                             }).addStyleClass('modal_label'),
                             new sap.m.ComboBox({
-                                id: 'scelte_cdl',
+                                placeholder: 'Scegli centro di lavoro',
+                                selectedKey: this.pars.cdl.key,
+                                selectionChange: function (e) {
+                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                                    oRouter.navTo(e.getParameter('selectedItem').getKey());
+                                }.bind(this),
                                 items: {
                                     path: 'cdl>/cdl',
                                     template: new sap.ui.core.Item({
@@ -484,12 +511,9 @@ sap.ui.define(
                         fitContainer: true,
                         items: [
                             new sap.m.Label({
-                                text: 'Solo ordini aperto'
+                                text: 'Solo ordini aperti'
                             }).addStyleClass('modal_label'),
-                            new sap.m.CheckBox({
-                                id: 'scelte_ordini_aperti',
-                                placeholder: 'Inserisci data fine'
-                            }).addStyleClass('modal_text')
+                            new sap.m.CheckBox({}).addStyleClass('modal_text')
                         ]
                     })
 
@@ -498,8 +522,8 @@ sap.ui.define(
                         items: [
                             data_inizio,
                             data_fine,
-                            cdl,
-                            ordini_aperti
+                            ordini_aperti,
+                            cdl
                         ]
                     }).addStyleClass('modal_scelte');
 
@@ -525,7 +549,19 @@ sap.ui.define(
                     this.getView().addDependent(this.scelte_dialog);
                 }
                 this.scelte_dialog.open();
-            }
+            },
+            home: function () {
+                const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                oRouter.navTo("home");
+            },
+            estrusione: function (oEvent) {
+                const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                if (document.location.hash === '#/estrusione') {
+                    oRouter.navTo("stampa");
+                } else {
+                    oRouter.navTo("estrusione");
+                }
+            },
         });
     }
 );

@@ -1601,35 +1601,6 @@
       "toll_neg": "12.91"
     }
   ],
-  "ordini_": [
-    {
-      "text": "Ordine",
-      "children": [
-        "Apertura ordine",
-        "Chiusura ordine"
-      ]
-    }, {
-      "text": "Chiusura fase",
-      "children": [
-        "Pre chiusura fase", "Annulla pre chiusura fase"
-      ]
-    }, {
-      "text": "Annulla re chiusura fase"
-    }, {
-      "text": "Personale",
-      "children": ["Personale ridotto", "Personale completo"]
-    }, {
-      "text": "Presenza cliente"
-    }, {
-      "text": "Segnalazione giunta"
-    }, {
-      "text": "Modal.rilevamento qtà"
-    },{
-      "text": "Operatore su CDL",
-      "children": [
-        "Entrata operatore su CDL", "Uscita operatore su CDL"]
-    }
-  ],
   "ordini": [
     {
       "text": "Apertura ordine"
@@ -1702,6 +1673,51 @@
       "text": "269 ATTESA CARRELLISTA"
     },    {
       "text": "556 Materiale da verificare"
+    }
+  ],
+  "funzioni_ordine_attivo" : [
+    {
+      "text": "Documentazione Ordine PDF"
+    },{
+      "text": "Documentazione Ordine Attivo"
+    },{
+      "text": "Ubic. allacciate"
+    },{
+      "text": "Immagine Articolo"
+    },{
+      "text": "Stampa Info Grafica"
+    },{
+      "text": "Check List"
+    },{
+      "text": "Consumo Bobine"
+    },{
+      "text": "Standard Qualità"
+    },{
+      "text": "Rilievi Qualità"
+    },{
+      "text": "Gestione Note Fase"
+    },{
+      "text": "Visualizza Note Ordine"
+    },{
+      "text": "Scheda Impianto PDF"
+    },{
+      "text": "Visualizza Picking"
+    },{
+      "text": "stampa Picking"
+    },{
+      "text": "Bobine Wip Utilizzabili"
+    },{
+      "text": "Stampa Bobine Wip Utilizzabili"
+    },{
+      "text": "Bobine in macchina"
+    },{
+      "text": "Bobine Wip Prodotte"
+    },{
+      "text": "Dettaglio Operazione"
+    },{
+      "text": "Dettaglio attività"
+    },{
+      "text": "Versa Bobine"
     }
   ]
 }

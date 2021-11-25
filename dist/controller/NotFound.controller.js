@@ -1,0 +1,1 @@
+sap.ui.define(["sap/ui/core/mvc/Controller"],function(n){"use strict";return n.extend("it.horsa.gualapack.macchina.controller.NotFound",{onInit:function(){}})});

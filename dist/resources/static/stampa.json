@@ -161,5 +161,50 @@
     },    {
       "text": "556 Materiale da verificare"
     }
+  ],
+  "funzioni_ordine_attivo" : [
+    {
+      "text": "Documentazione Ordine PDF"
+    },{
+      "text": "Documentazione Ordine Attivo"
+    },{
+      "text": "Ubic. allacciate"
+    },{
+      "text": "Immagine Articolo"
+    },{
+      "text": "Stampa Info Grafica"
+    },{
+      "text": "Check List"
+    },{
+      "text": "Consumo Bobine"
+    },{
+      "text": "Standard Qualità"
+    },{
+      "text": "Rilievi Qualità"
+    },{
+      "text": "Gestione Note Fase"
+    },{
+      "text": "Visualizza Note Ordine"
+    },{
+      "text": "Scheda Impianto PDF"
+    },{
+      "text": "Visualizza Picking"
+    },{
+      "text": "stampa Picking"
+    },{
+      "text": "Bobine Wip Utilizzabili"
+    },{
+      "text": "Stampa Bobine Wip Utilizzabili"
+    },{
+      "text": "Bobine in macchina"
+    },{
+      "text": "Bobine Wip Prodotte"
+    },{
+      "text": "Dettaglio Operazione"
+    },{
+      "text": "Dettaglio attività"
+    },{
+      "text": "Versa Bobine"
+    }
   ]
 }
