@@ -1,0 +1,16 @@
+{
+  "cdl": [
+    {
+      "key": "home",
+      "text": "Home Page"
+    },
+    {
+      "key": "stampa",
+      "text": "Stampa"
+    },
+    {
+      "key": "estrusione",
+      "text": "Estrusione"
+    }
+  ]
+}

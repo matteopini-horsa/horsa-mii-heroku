@@ -1,6 +1,6 @@
 sap.ui.define(
-    ["sap/ui/core/UIComponent", "sap/ui/Device", "it/horsa/gualapack/macchina/model/models"],
-    function (UIComponent, Device, models) {
+    ["sap/ui/core/UIComponent", "sap/ui/Device", "it/horsa/gualapack/macchina/model/models", "it/horsa/gualapack/macchina/services/AppService"],
+    function (UIComponent, Device, models, AppService) {
         "use strict";
 
         return UIComponent.extend("it.horsa.gualapack.macchina.Component", {
@@ -14,14 +14,14 @@ sap.ui.define(
              * @override
              */
             init: function () {
+                AppService.init(this);
+
                 // call the base component's init function
                 UIComponent.prototype.init.apply(this, arguments);
 
                 // enable routing
                 this.getRouter().initialize();
 
-                // set the device model
-                this.setModel(models.createDeviceModel(), "device");
             }
         });
     }

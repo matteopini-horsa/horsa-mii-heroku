@@ -5,23 +5,18 @@ sap.ui.define(
         "sap/ui/core/UIComponent",
         "it/horsa/gualapack/macchina/model/formatter",
         "sap/ui/model/json/JSONModel",
-        "sap/m/Button",
-        "sap/m/Dialog",
-        "sap/m/List",
-        "sap/m/StandardListItem",
-        "sap/ui/layout/Grid",
-        "sap/m/FlexBox",
-        "./SqlFieldType",
-        "./MesServices",
-        "it/horsa/gualapack/macchina/control/Info"
+        "../services/SqlFieldType",
+        "../services/MesServices",
+        "it/horsa/gualapack/macchina/control/Info",
+        "../services/AppService"
     ],
-    function (Controller, History, UIComponent, formatter, JSONModel, Button, Dialog, List, StandardListItem, Grid, FlexBox, SqlFieldType, MesServices, Info) {
+    function (Controller, History, UIComponent, formatter, JSONModel, SqlFieldType, MesServices, Info, AppService) {
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
+            route: null,
             onInit: function () {
-                const prova = this.getOwnerComponent().getModel("prova")
-                console.log(`%cBaseController onInit`, `border:1px solid black;color:black;padding:2px 4px;`, `prova`, prova);
+                AppService.init(this.getOwnerComponent());
                 let tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1)
                 tomorrow = tomorrow.toISOString().substring(0, 10);
@@ -29,37 +24,58 @@ sap.ui.define(
                 let hash = document.location.hash.split('/').pop();
                 hash = hash || 'stampa';
 
+                this.route = hash;
+
                 this.pars = {
                     data_inizio: new Date().toISOString().substring(0, 10),
                     data_fine: tomorrow,
-                    cdl: hash
+                    cdl: hash,
+                    data_inizio_tmp: new Date().toISOString().substring(0, 10),
+                    data_fine_tmp: tomorrow,
+                    cdl_tmp: hash
                 }
 
-
-                MesServices('cdl')
-                    .then(
-                        (cdl_data) => {
-                            const cdl = new sap.ui.model.json.JSONModel();
-                            cdl.setData(cdl_data);
-                            this.getView().setModel(cdl, "cdl");
-                            this.pars.cdl = cdl_data.cdl.find(c => c.key === hash)
-                        }
-                    )
-                MesServices('orders')
-                    .then(
-                        (orders_data) => this.ordini(orders_data)
-                    );
+                const cdl_data = AppService.get('cdl');
+                const cdl = new sap.ui.model.json.JSONModel();
+                cdl.setData(cdl_data);
+                this.getView().setModel(cdl, "cdl");
+                this.pars.cdl = cdl_data.find(c => c.key === hash)
+                this.pars.cdl_tmp = this.pars.cdl;
 
                 MesServices(hash)
                     .then(
-                        (cdl_data) => this.cdl(cdl_data)
+                        (scheda_data) => this.scheda(scheda_data)
                     )
 
+                this.getRouter().getRoute(this.route).attachMatched(this._onRouteMatched, this);
+
+            },
+            _onRouteMatched: function () {
+
+                if (sessionStorage.getItem('pars')) {
+                    this.pars = JSON.parse(sessionStorage.getItem('pars'));
+                    sessionStorage.removeItem('pars');
+                }
+
+                this.fetch_data({
+                    params: [
+                        this.pars.data_inizio,
+                        this.pars.data_fine,
+                        null,
+                        this.route.charAt(0).toUpperCase() + this.route.substring(1)
+                    ]
+                });
             },
             onAfterRendering: function () {
                 this.afterRendering = true;
                 this.infos();
 
+            },
+            fetch_data: function (options) {
+                MesServices('orders', options)
+                    .then(
+                        (orders_data) => this.ordini(orders_data)
+                    );
             },
             infos: function () {
                 if (this.getModel('scheda')) {
@@ -103,51 +119,60 @@ sap.ui.define(
                 }
             },
             ordini: function (orders_data) {
-
+                const cdl_data = this.getModel('scheda');
                 const tab_columns = [];
                 const orders = new sap.ui.model.json.JSONModel();
+
+                const scheda = this.getModel('scheda').oData;
+
+                if (scheda.patches) {
+                    orders_data = this.patch_orders_data(orders_data, scheda.patches);
+                }
                 orders.setData(orders_data);
                 this.getView().setModel(orders, "ordini");
 
-                var t = this.getView().byId('tabella');
+                const t = this.getView().byId('tabella');
 
-                orders_data.Rowsets.Rowset[0].Columns.Column.forEach((column, idx) => {
+                if (t.getColCount() === 0) {
 
-                    //  Creazione colonna
-                    t.addColumn(new sap.m.Column({
-                        header: new sap.m.Label({text: column.Name}),
-                        hAlign: (column.SQLDataType >= 3 && column.SQLDataType < 10) ? 'Right' : 'Left'
-                    }))
+                    const i18n = this.getResourceBundle();
+                    cdl_data.oData.columns.forEach((col, idx) => {
+                        const column = orders_data.Rowsets.Rowset[0].Columns.Column.find(c => c.Name === col);
+                        if (column) {
+                            t.addColumn(new sap.m.Column({
+                                header: new sap.m.Label({text: i18n.getText(column.Name) || column.Name}),
+                                hAlign: (column.SQLDataType >= 3 && column.SQLDataType < 10) ? 'Right' : 'Left'
+                            }))
 
-                    //  Definizione tipi colonna
-                    tab_columns.push(SqlFieldType(column));
+                            tab_columns.push(SqlFieldType(column));
+                        }
+                    })
 
-                });
+                    t.bindItems('/Rowsets/Rowset/0/Row', new sap.m.ColumnListItem({
+                        cells: tab_columns
+                    }));
+
+                }
 
                 //  Tabella
                 t.setModel(orders);
-                t.bindItems('/Rowsets/Rowset/0/Row', new sap.m.ColumnListItem({
-                    cells: tab_columns
-                }));
-                // valueFormat: "yyyy-MM-dd",
-                //     displayFormat: 'long'
-                const oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "dd-MM-yyyy"});
+                const oDateFormat = sap.ui.core.format.DateFormat.getInstance({pattern: "dd/MM/yyyy"});
                 t.setHeaderText('Ordini' + ' dal ' + oDateFormat.format(new Date(this.pars.data_inizio)) + ' al ' + oDateFormat.format(new Date(this.pars.data_fine)));
                 t.setFixedLayout(false);
                 t.setAlternateRowColors(true);
 
             },
-            cdl: function (cdl_data) {
+            scheda: function (cdl_data) {
 
-                const cdl = new sap.ui.model.json.JSONModel(cdl_data);
-                this.setModel(cdl, 'scheda');
+                const scheda = new sap.ui.model.json.JSONModel(cdl_data);
+                this.setModel(scheda, 'scheda');
 
-                const i18n = this.getModel('i18n');
+                // const i18n = this.getModel('i18n');
                 document.title = cdl_data.nome
 
                 //  Microchart
                 var m = this.getView().byId('microchart');
-                m.setModel(cdl)
+                m.setModel(scheda)
 
                 if (this.afterRendering) {
                     this.infos();
@@ -229,7 +254,7 @@ sap.ui.define(
                 if (!this.TTS_dialog) {
                     const button_template = (type) => {
 
-                        return new Button({
+                        return new sap.m.Button({
                             text: '{scheda>text}',
                             type: type || 'Default',
                             width: '100%'
@@ -242,7 +267,7 @@ sap.ui.define(
                                 text: 'Ordini',
                                 level: 'H1'
                             }).addStyleClass('grid_title'),
-                            new Grid({
+                            new sap.ui.layout.Grid({
                                 defaultSpan: 'XL6 L6 M12 S12',
                                 content: {
                                     path: 'scheda>/ordini',
@@ -250,7 +275,11 @@ sap.ui.define(
                                 }
                             })
                         ]
-                    }).addStyleClass('ordini_bg');
+                    }).addStyleClass('ordini_bg')
+                        .setLayoutData(new sap.ui.layout.GridData({
+                                span: "XL4 L4 M4 S6"
+                            })
+                        );
 
                     const funzioni = new sap.ui.layout.FixFlex({
                         fixContent: [
@@ -258,7 +287,7 @@ sap.ui.define(
                                 text: 'Funzioni',
                                 level: 'H1'
                             }).addStyleClass('grid_title'),
-                            new Grid({
+                            new sap.ui.layout.Grid({
                                 defaultSpan: 'XL4 L4 M6 S12',
                                 content: {
                                     path: 'scheda>/funzioni',
@@ -267,21 +296,29 @@ sap.ui.define(
                             })
                         ]
                     }).addStyleClass('funzioni_bg')
+                        .setLayoutData(new sap.ui.layout.GridData({
+                                span: "XL8 L8 M8 S6"
+                            })
+                        );
 
                     const flex = [
                         ordini,
                         funzioni
                     ];
-                    const grid = new FlexBox({
-                        items: flex
+                    // const grid = new sap.m.FlexBox({
+                    //     items: flex
+                    // });
+
+                    const grid = new sap.ui.layout.Grid({
+                        content: flex
                     });
 
-                    this.TTS_dialog = new Dialog({
+                    this.TTS_dialog = new sap.m.Dialog({
                         title: "Menu TTS",
                         // contentWidth: "80%",
                         // contentHeight: "80%",
                         content: grid,
-                        endButton: new Button({
+                        endButton: new sap.m.Button({
                             text: "Chiudi",
                             press: function () {
                                 this.TTS_dialog.close();
@@ -297,23 +334,23 @@ sap.ui.define(
             menu_funzioniOrdineAttivo: function () {
                 if (!this.funzioniOrdineAttivo_dialog) {
                     const button_template = (type) => {
-                        return new Button({
+                        return new sap.m.Button({
                             text: '{scheda>text}',
                             type: type || 'Default',
                             width: '100%'
                         })
                     };
 
-                    this.funzioniOrdineAttivo_dialog = new Dialog({
+                    this.funzioniOrdineAttivo_dialog = new sap.m.Dialog({
                         title: "Funzioni ordine attivo",
-                        content: new Grid({
+                        content: new sap.ui.layout.Grid({
                             defaultSpan: 'XL4 L4 M6 S12',
                             content: {
                                 path: 'scheda>/funzioni_ordine_attivo',
                                 template: button_template()
                             }
                         }),
-                        endButton: new Button({
+                        endButton: new sap.m.Button({
                             text: "Chiudi",
                             press: function () {
                                 this.funzioniOrdineAttivo_dialog.close();
@@ -330,7 +367,7 @@ sap.ui.define(
                 if (!this.scelte_dialog) {
 
                     // //  Data inizio
-                    const data_inizio = new FlexBox({
+                    const data_inizio = new sap.m.FlexBox({
                         justifyContent: 'SpaceBetween',
                         alignItems: 'Center',
                         items: [
@@ -341,12 +378,15 @@ sap.ui.define(
                                 placeholder: 'Inserisci data inizio',
                                 value: this.pars.data_inizio,
                                 valueFormat: "yyyy-MM-dd",
-                                displayFormat: 'long'
+                                displayFormat: 'long',
+                                change: function (e) {
+                                    this.pars.data_inizio_tmp = e.getParameters('value').value;
+                                }.bind(this),
                             }).addStyleClass('modal_text')
                         ]
                     })
                     //  Data fine
-                    const data_fine = new FlexBox({
+                    const data_fine = new sap.m.FlexBox({
                         justifyContent: 'SpaceBetween',
                         alignItems: 'Center',
                         fitContainer: true,
@@ -358,13 +398,16 @@ sap.ui.define(
                                 placeholder: 'Inserisci data fine',
                                 value: this.pars.data_fine,
                                 valueFormat: "yyyy-MM-dd",
-                                displayFormat: 'long'
+                                displayFormat: 'long',
+                                change: function (e) {
+                                    this.pars.data_fine_tmp = e.getParameters('value').value;
+                                }.bind(this)
                             }).addStyleClass('modal_text')
                         ]
                     })
 
                     //  Centro di lavoro
-                    const cdl = new FlexBox({
+                    const cdl = new sap.m.FlexBox({
                         justifyContent: 'SpaceBetween',
                         alignItems: 'Center',
                         fitContainer: true,
@@ -374,13 +417,12 @@ sap.ui.define(
                             }).addStyleClass('modal_label'),
                             new sap.m.ComboBox({
                                 placeholder: 'Scegli centro di lavoro',
-                                selectedKey: this.pars.cdl.key,
+                                selectedKey: this.route,
                                 selectionChange: function (e) {
-                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                                    oRouter.navTo(e.getParameter('selectedItem').getKey());
+                                    this.pars.cdl_tmp = e.getParameter('selectedItem').getKey();
                                 }.bind(this),
                                 items: {
-                                    path: 'cdl>/cdl',
+                                    path: 'cdl>/',
                                     template: new sap.ui.core.Item({
                                         key: "{cdl>key}",
                                         text: "{cdl>text}",
@@ -390,7 +432,7 @@ sap.ui.define(
                         ]
                     })
                     //  Solo ordini aperti?
-                    const ordini_aperti = new FlexBox({
+                    const ordini_aperti = new sap.m.FlexBox({
                         justifyContent: 'SpaceBetween',
                         alignItems: 'Center',
                         fitContainer: true,
@@ -402,7 +444,7 @@ sap.ui.define(
                         ]
                     })
 
-                    const grid = new FlexBox({
+                    const grid = new sap.m.FlexBox({
                         direction: 'Column',
                         items: [
                             data_inizio,
@@ -412,19 +454,50 @@ sap.ui.define(
                         ]
                     }).addStyleClass('modal_scelte');
 
-                    this.scelte_dialog = new Dialog({
+                    this.scelte_dialog = new sap.m.Dialog({
                         title: "Scelte",
                         content: grid,
-                        beginButton: new Button({
+                        beforeOpen: function (o) {
+
+                            if (o.getSource().getContent()[0].getItems().length) {
+                                o.getSource().getContent()[0].getItems()[3].getItems()[1].setSelectedKey(this.route);
+                                this.pars.cdl = this.route;
+                                this.pars.cdl_tmp = this.route;
+                            }
+                        }.bind(this),
+                        beginButton: new sap.m.Button({
                             type: sap.m.ButtonType.Emphasized,
                             text: "OK",
                             press: function () {
                                 this.scelte_dialog.close();
+                                this.pars.data_inizio = this.pars.data_inizio_tmp;
+                                this.pars.data_fine = this.pars.data_fine_tmp;
+                                if (this.route === this.pars.cdl_tmp) {
+                                    this.fetch_data({
+                                        params: [
+                                            this.pars.data_inizio,
+                                            this.pars.data_fine,
+                                            null,
+                                            this.pars.cdl_tmp.charAt(0).toUpperCase() + this.pars.cdl_tmp.substring(1)
+                                        ]
+                                    });
+                                } else {
+                                    this.pars.cdl = this.pars.cdl_tmp;
+                                    const tmp = Object.assign({}, this.pars);
+                                    delete tmp.cdl;
+                                    delete tmp.cdl_tmp;
+                                    sessionStorage.setItem('pars', JSON.stringify(tmp));
+                                    const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+                                    oRouter.navTo(this.pars.cdl);
+                                }
                             }.bind(this)
                         }),
-                        endButton: new Button({
+                        endButton: new sap.m.Button({
                             text: "Chiudi",
                             press: function () {
+                                this.pars.cdl_tmp = this.pars.cdl;
+                                this.pars.data_inizio_tmp = this.pars.data_inizio;
+                                this.pars.data_fine_tmp = this.pars.data_fine;
                                 this.scelte_dialog.close();
                             }.bind(this)
                         })
@@ -435,18 +508,30 @@ sap.ui.define(
                 }
                 this.scelte_dialog.open();
             },
-            home: function () {
-                const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                oRouter.navTo("home");
-            },
-            estrusione: function (oEvent) {
-                const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
-                if (document.location.hash === '#/estrusione') {
-                    oRouter.navTo("stampa");
-                } else {
-                    oRouter.navTo("estrusione");
-                }
-            },
+            patch_orders_data: function (orders_data, patches) {
+                patches.forEach(patch => {
+                    orders_data.Rowsets.Rowset[0].Columns.Column.push({
+                        Name: patch,
+                        SQLDataType: -999
+                    })
+                    if (orders_data.Rowsets.Rowset[0].hasOwnProperty('Row')) {
+                        orders_data.Rowsets.Rowset[0].Row.forEach(r => r[patch] = ' ')
+                    }
+                })
+                return orders_data;
+            }
+            // home: function () {
+            //     const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            //     oRouter.navTo("home");
+            // },
+            // estrusione: function (oEvent) {
+            //     const oRouter = sap.ui.core.UIComponent.getRouterFor(this);
+            //     if (document.location.hash === '#/estrusione') {
+            //         oRouter.navTo("stampa");
+            //     } else {
+            //         oRouter.navTo("estrusione");
+            //     }
+            // },
         });
     }
 );

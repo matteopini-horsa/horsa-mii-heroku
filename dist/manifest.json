@@ -1,7 +1,7 @@
 {
   "_version": "1.21.0",
   "sap.app": {
-    "id": "it.horsa.gualapack.macchina",
+    "id": "qwerty.it.horsa.gualapack.macchina",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -53,7 +53,7 @@
           "bundleName": "it.horsa.gualapack.macchina.i18n.i18n"
         }
       },
-      "prova": {
+      "app": {
         "type": "sap.ui.model.json.JSONModel"
       }
     },

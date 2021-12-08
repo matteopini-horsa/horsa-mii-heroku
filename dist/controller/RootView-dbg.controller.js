@@ -1,51 +1,44 @@
 sap.ui.define([
     "sap/ui/core/mvc/Controller",
-    "./MesServices"
-], function (Controller, MesServices) {
+    "../services/MesServices",
+    "../services/AppService"
+], function (Controller, MesServices, AppService) {
     "use strict";
 
     return Controller.extend("it.horsa.gualapack.macchina.controller.RootView", {
 
         onInit: function () {
-            const t = this;
-            MesServices('cdl')
-                .then(
-                    (cdl_data) => {
-                        const cdl = new sap.ui.model.json.JSONModel();
-                        cdl.setData(cdl_data);
-                        this.getView().setModel(cdl, "cdl");
+            AppService.init(this.getOwnerComponent());
+                const cdl = new sap.ui.model.json.JSONModel();
+                cdl.setData(AppService.get('cdl'));
+                this.getView().setModel(cdl, "cdl");
 
-                        const prova = this.getOwnerComponent().getModel("prova")
-                        console.log(`%cRootView `, `border:1px solid black;color:black;padding:2px 4px;`, `prova`, prova);
-                        prova.setData(cdl_data);
+                const pulsantiera = this.getView().byId('pulsantiera');
+                pulsantiera.items = []
 
-                        const pulsantiera = this.getView().byId('pulsantiera');
-                        pulsantiera.items = []
+                const button_template = (type) => {
+                    return new sap.m.Button({
+                        text: '{cdl>text}',
+                        type: type || 'Default',
+                        width: '100%',
+                        press: function (e) {
+                            const path = e.getSource().oBindingContexts.cdl.sPath
+                            this.goto(e.getSource().oBindingContexts.cdl.oModel.getProperty(path).key);
+                        }.bind(this)
+                    })
+                };
 
-                        const button_template = (type) => {
-                            return new sap.m.Button({
-                                text: '{cdl>text}',
-                                type: type || 'Default',
-                                width: '100%',
-                                press: function (e) {
-                                    const path = e.getSource().oBindingContexts.cdl.sPath
-                                    this.goto(e.getSource().oBindingContexts.cdl.oModel.getProperty(path).key);
-                                }.bind(t)
-                            })
-                        };
-
-                        const grid = new sap.ui.layout.Grid({
-                            defaultSpan: 'XL12 L12 M12 S12',
-                            content: {
-                                path: 'cdl>/cdl',
-                                template: button_template()
-                            }
-                        })
-
-                        pulsantiera.addItem(grid);
-
+                const grid = new sap.ui.layout.Grid({
+                    defaultSpan: 'XL12 L12 M12 S12',
+                    content: {
+                        path: 'cdl>/',
+                        template: button_template()
                     }
-                )
+                })
+
+                pulsantiera.addItem(grid);
+
+
         },
         goto: function(page) {
             var oRouter = sap.ui.core.UIComponent.getRouterFor(this);

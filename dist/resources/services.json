@@ -13,7 +13,8 @@
   },
   "services": {
     "orders": {
-      "path": "/XMII/Illuminator?QueryTemplate=Mes/BusinessObjects/ProductionOrders/GetAll&Content-Type=text/json",
+      "path": "/XMII/Illuminator?QueryTemplate=Mes/BusinessObjects/ProductionOrders/GetAllProductionOrderByWC&Content-Type=text/json",
+      "params": ["Param.1", "Param.2", "Param.3", "Param.4"],
       "method": "GET",
       "auth": true
     }

@@ -5,14 +5,15 @@ sap.ui.define(
     function (JSONModel) {
         let init = false;
         const services = new sap.ui.model.json.JSONModel();
-        services.loadData(`resources/services.json`)
+        const prefix = document.location.hostname === 'localhost' ? '' : '/XMII/CM/Mes/macchina';
+        services.loadData(`${prefix}/resources/services.json`)
             .then(
                 () => {
                     init = true;
                 }
             )
 
-        function get_service(service_name) {
+        function get_service(service_name, options) {
 
             const services_data = services.getData();
             if (!services_data.services.hasOwnProperty(service_name)) {
@@ -22,11 +23,19 @@ sap.ui.define(
 
             const service = services_data.services[service_name];
             const conf = services_data.conf[service.conf || 'base'];
-            const proxy = 'http://localhost:8090/';
+            const proxy = prefix ? '' : 'http://localhost:8090/';
+            // const proxy = 'http://localhost:8090/';
 
             const o = {
                 path: `${proxy}${conf.protocol}://${conf.server}${conf.port ? ':' + conf.port : ''}${service.path}`,
                 method: service.method || 'GET'
+            }
+
+            if (options.params && service.params) {
+                o.path += (o.path.includes('?') ? '&' : '?') +
+                    options.params.map((param, i) => param ? service.params[i] + '=' + param : null)
+                        .filter(p => p)
+                        .join('&');
             }
 
             if (service.auth && conf.auth) {
@@ -40,20 +49,20 @@ sap.ui.define(
 
         function get_file(service_name) {
             return {
-                path: `/resources/static/${service_name}.json`,
+                path: `${prefix}/resources/static/${service_name}.json`,
                 method: 'GET'
             };
         }
 
         //  Crea il template delle colonne in base al tipo di colonna definito da SQLDataType
-        function get(service_name) {
+        function get(service_name, options) {
             return new Promise((resolve, reject) => {
 
                 (function resolve_service() {
                     if (init) {
                         let o;
                         // if (document.location.hostname === 'localhost') {
-                            o = get_service(service_name);
+                            o = get_service(service_name, options);
                         // } else {
                         //     o = get_file(service_name);
                         // }

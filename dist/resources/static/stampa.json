@@ -91,120 +91,189 @@
   "ordini": [
     {
       "text": "Apertura ordine"
-    }, {
+    },
+    {
       "text": "Chiusura ordine"
-    }, {
+    },
+    {
       "text": "Pre chiusura fase"
-    }, {
+    },
+    {
       "text": "Annulla pre chiusura fase"
-    },{
+    },
+    {
       "text": "Personale ridotto"
-    }, {
+    },
+    {
       "text": "Personale completo"
-    }, {
+    },
+    {
       "text": "Presenza cliente"
-    }, {
+    },
+    {
       "text": "Segnalazione giunta"
-    }, {
+    },
+    {
       "text": "Modal.rilevamento qtà"
-    }, {}, {
+    },
+    {},
+    {
       "text": "Entrata operatore su CDL"
-    }, {
+    },
+    {
       "text": "Uscita operatore su CDL"
     }
   ],
   "funzioni": [
     {
       "text": "A01 Rottura materiale"
-    },    {
+    },
+    {
       "text": "A02 Cambi"
-    },    {
+    },
+    {
       "text": "B00 Preparazione macchina"
-    },    {
+    },
+    {
       "text": "B03 Smontaggio macchina"
-    },    {
+    },
+    {
       "text": "C00 Guasti"
-    },    {
+    },
+    {
       "text": "C01 Mancanza/Attesa"
-    },    {
+    },
+    {
       "text": "C02 Lavaggio/Spazzolatura"
-    },    {
+    },
+    {
       "text": "C03 Ritocco cilindri"
-    },    {
+    },
+    {
       "text": "C04 Scromatura/Ricromatura"
-    },    {
+    },
+    {
       "text": "C05 Imianti difettosi"
-    },    {
+    },
+    {
       "text": "C06 Pausa"
-    },    {
+    },
+    {
       "text": "C07 Pulizia"
-    },    {
+    },
+    {
       "text": "C08 Fermo rispetto qualità"
-    },    {
+    },
+    {
       "text": "C11 Macchina inattiva"
-    },    {
+    },
+    {
       "text": "C12 Materia prima difettosa"
-    },    {
+    },
+    {
       "text": "100 Avviamento (SI PRELIEVI)"
-    },    {
+    },
+    {
       "text": "105 Avviamento inizio consumo vero"
-    },    {
+    },
+    {
       "text": "110 Avviamento (NO PRELIEVI)"
-    },    {
+    },
+    {
       "text": "220 Fermo per guasto meccanico"
-    },    {
+    },
+    {
       "text": "221 Fermo per guasto elettrico"
-    },    {
+    },
+    {
       "text": "268 ATTESA CILINDRI"
-    },    {
+    },
+    {
       "text": "269 ATTESA CARRELLISTA"
-    },    {
+    },
+    {
       "text": "556 Materiale da verificare"
     }
   ],
-  "funzioni_ordine_attivo" : [
+  "funzioni_ordine_attivo": [
     {
       "text": "Documentazione Ordine PDF"
-    },{
+    },
+    {
       "text": "Documentazione Ordine Attivo"
-    },{
+    },
+    {
       "text": "Ubic. allacciate"
-    },{
+    },
+    {
       "text": "Immagine Articolo"
-    },{
+    },
+    {
       "text": "Stampa Info Grafica"
-    },{
+    },
+    {
       "text": "Check List"
-    },{
+    },
+    {
       "text": "Consumo Bobine"
-    },{
+    },
+    {
       "text": "Standard Qualità"
-    },{
+    },
+    {
       "text": "Rilievi Qualità"
-    },{
+    },
+    {
       "text": "Gestione Note Fase"
-    },{
+    },
+    {
       "text": "Visualizza Note Ordine"
-    },{
+    },
+    {
       "text": "Scheda Impianto PDF"
-    },{
+    },
+    {
       "text": "Visualizza Picking"
-    },{
+    },
+    {
       "text": "stampa Picking"
-    },{
+    },
+    {
       "text": "Bobine Wip Utilizzabili"
-    },{
+    },
+    {
       "text": "Stampa Bobine Wip Utilizzabili"
-    },{
+    },
+    {
       "text": "Bobine in macchina"
-    },{
+    },
+    {
       "text": "Bobine Wip Prodotte"
-    },{
+    },
+    {
       "text": "Dettaglio Operazione"
-    },{
+    },
+    {
       "text": "Dettaglio attività"
-    },{
+    },
+    {
       "text": "Versa Bobine"
     }
+  ],
+  "columns": [
+    "ProductionOrder",
+    "MaterialId",
+    "QtyTarget",
+    "QtyWork",
+    "QtyProduced",
+    "UnitOfMeasurement",
+    "PlannedStart",
+    "PlannedEnd",
+    "RouterId",
+    "Status",
+    "RealStart",
+    "RealEnd",
+    "Plant",
+    "OrderType"
   ]
 }
