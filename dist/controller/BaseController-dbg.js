@@ -14,7 +14,9 @@ sap.ui.define(
         "use strict";
 
         return Controller.extend("it.horsa.gualapack.macchina.controller.BaseController", {
+
             route: null,
+
             onInit: function () {
                 AppService.init(this.getOwnerComponent());
                 let tomorrow = new Date();
